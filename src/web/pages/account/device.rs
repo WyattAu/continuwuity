@@ -118,9 +118,12 @@ async fn route_remove_device(
 			DeviceCard::for_device(&services, &user_id, device, DeviceCardStyle::Minimal).await;
 		let last_device = services.users.all_devices_metadata(&user_id).count().await <= 1;
 
-		response!(RemoveDevice::new(context, RemoveDeviceBody::Form {
-			device_card: Box::new(device_card),
-			last_device
-		}))
+		response!(RemoveDevice::new(
+			context,
+			RemoveDeviceBody::Form {
+				device_card: Box::new(device_card),
+				last_device
+			}
+		))
 	}
 }

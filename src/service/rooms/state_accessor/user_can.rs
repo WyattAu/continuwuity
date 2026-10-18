@@ -52,12 +52,13 @@ impl super::Service {
 
 		if power_levels.user_can_redact_own_event(sender) {
 			let is_own_event = match redacting_event {
-				| Ok(redacting_event) =>
+				| Ok(redacting_event) => {
 					if federation {
 						redacting_event.sender().server_name() == sender.server_name()
 					} else {
 						redacting_event.sender() == sender
-					},
+					}
+				},
 				| _ => false,
 			};
 			trace!(%is_own_event, "User can redact own event");
@@ -120,8 +121,9 @@ impl super::Service {
 			});
 
 		match history_visibility {
-			| HistoryVisibility::Invited =>
-				self.services.state_cache.is_invited(user_id, room_id).await,
+			| HistoryVisibility::Invited => {
+				self.services.state_cache.is_invited(user_id, room_id).await
+			},
 			| HistoryVisibility::WorldReadable => true,
 			| _ => false,
 		}

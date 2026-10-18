@@ -30,7 +30,9 @@ use tracing_subscriber::{EnvFilter, filter::LevelFilter};
 use crate::{admin, admin::AdminCommand, context::Context};
 
 #[must_use]
-pub(super) fn complete(line: &str) -> String { complete_command(AdminCommand::command(), line) }
+pub(super) fn complete(line: &str) -> String {
+	complete_command(AdminCommand::command(), line)
+}
 
 pub(super) fn dispatch(services: Arc<Services>, command: CommandInput) -> ProcessorFuture {
 	Box::pin(handle_command(services, command))

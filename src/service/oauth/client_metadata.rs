@@ -111,8 +111,11 @@ impl ClientMetadata {
 						            have an authority.");
 					}
 				},
-				| _ =>
-					return Err("A redirect URI's scheme is not valid for this application type."),
+				| _ => {
+					return Err(
+						"A redirect URI's scheme is not valid for this application type.",
+					);
+				},
 			}
 		}
 

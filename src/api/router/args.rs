@@ -41,7 +41,9 @@ where
 {
 	type Target = R;
 
-	fn deref(&self) -> &Self::Target { &self.body }
+	fn deref(&self) -> &Self::Target {
+		&self.body
+	}
 }
 
 impl<R> FromRequest<State, Body> for Args<R>

@@ -1,11 +1,32 @@
 use std::sync::Arc;
 
 use conduwuit::{
-	metrics::{AsyncInstrument, KeyValue},
+	metrics::{AsyncInstrument, KeyValue, KitGauge},
 	utils::millis_since_unix_epoch,
 };
 
 use crate::Services;
+
+/// Mirrors one observed value into the metrics-kit registry for the
+/// OpenMetrics exposition path. Labelled series are skipped: the v1 kit
+/// registry carries single-series gauges only, and labelled series remain
+/// on the Prometheus endpoint.
+struct KitObserver {
+	kit: Option<KitGauge>,
+}
+
+impl AsyncInstrument<u64> for KitObserver {
+	fn observe(&self, measurement: u64, attributes: &[KeyValue]) {
+		if attributes.is_empty()
+			&& let Some(kit) = &self.kit
+		{
+			// f64 represents integers exactly up to 2^53; these are count
+			// gauges (estimated keys, files, queue depths).
+			#[allow(clippy::as_conversions, clippy::cast_precision_loss)]
+			kit.set(measurement as f64);
+		}
+	}
+}
 
 impl Services {
 	pub(crate) fn register_metrics(self: &Arc<Self>) {
@@ -145,10 +166,14 @@ impl Services {
 		unit: &'static str,
 		callback: F,
 	) where
-		F: Fn(&Self, &dyn AsyncInstrument<u64>) + Send + Sync + 'static,
+		F: Fn(&Self, &dyn AsyncInstrument<u64>) + Send + Sync + 'static + Clone,
 	{
 		let services = Arc::downgrade(self);
-		self.server
+		let kit = self.server.metrics.kit_gauge(name, description);
+		let kit_services = services.clone();
+		let kit_callback = callback.clone();
+		let mut builder = self
+			.server
 			.metrics
 			.meter
 			.u64_observable_gauge(name)
@@ -158,8 +183,22 @@ impl Services {
 				if let Some(services) = services.upgrade() {
 					callback(&services, observer);
 				}
-			})
-			.build();
+			});
+
+		// Mirror into the metrics-kit registry (OpenMetrics path). The
+		// closure re-runs for this observer; the estimates it reads are
+		// cheap RocksDB property reads, and KitObserver skips labelled
+		// series (v1 kit scope: single-series gauges).
+		if let Some(kit) = kit {
+			builder = builder.with_callback(move |_| {
+				if let Some(services) = kit_services.upgrade() {
+					let observer = KitObserver { kit: Some(kit.clone()) };
+					kit_callback(&services, &observer);
+				}
+			});
+		}
+
+		builder.build();
 	}
 }
 

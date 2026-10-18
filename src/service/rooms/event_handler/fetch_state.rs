@@ -49,7 +49,7 @@ impl super::Service {
 				|e| debug_warn!(elapsed=?start.elapsed(), "Fetching state for event failed: {e}"),
 			) {
 			| Ok(resp) => Ok(resp),
-			| Err(e) =>
+			| Err(e) => {
 				if e.is_not_found() {
 					self.fetch_state_ids_from_backfill_servers(
 						event_id.to_owned(),
@@ -58,7 +58,8 @@ impl super::Service {
 					.await
 				} else {
 					Err(e)
-				},
+				}
+			},
 		}?;
 
 		debug!(elapsed=?start.elapsed(), events = res.pdu_ids.len(), "Fetching state events");

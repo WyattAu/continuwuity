@@ -68,8 +68,9 @@ where
 
 	if !status.is_success() {
 		return match status {
-			| http::StatusCode::FORBIDDEN =>
-				Err!(Request(Forbidden("Request was rejected by antispam service.",))),
+			| http::StatusCode::FORBIDDEN => {
+				Err!(Request(Forbidden("Request was rejected by antispam service.",)))
+			},
 			| _ => Err!(BadServerResponse(warn!(
 				"Antispam returned unsuccessful HTTP response {status}",
 			))),

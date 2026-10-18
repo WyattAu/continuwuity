@@ -202,6 +202,10 @@ pub fn build(router: Router<State>, state: State) -> Router<State> {
 
 	if config.allow_prometheus_metrics {
 		router = router.route("/_continuwuity/metrics", get(client::continuwuity_metrics));
+		router = router.route(
+			"/_continuwuity/metrics/openmetrics",
+			get(client::continuwuity_metrics_openmetrics),
+		);
 	}
 
 	if config.allow_federation {

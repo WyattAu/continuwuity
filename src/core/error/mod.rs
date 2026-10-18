@@ -142,7 +142,9 @@ pub enum Error {
 impl Error {
 	#[inline]
 	#[must_use]
-	pub fn from_errno() -> Self { Self::Io(std::io::Error::last_os_error()) }
+	pub fn from_errno() -> Self {
+		Self::Io(std::io::Error::last_os_error())
+	}
 
 	//#[deprecated]
 	pub fn bad_database(message: &'static str) -> Self {
@@ -174,8 +176,9 @@ impl Error {
 		use ruma::api::error::ErrorKind::{Unknown, Unrecognized};
 
 		match self {
-			| Self::Federation(_, error) | Self::Ruma(error) =>
-				response::ruma_error_kind(error).clone(),
+			| Self::Federation(_, error) | Self::Ruma(error) => {
+				response::ruma_error_kind(error).clone()
+			},
 			| BadRequest(kind, ..) | Self::Request(kind, ..) => kind.clone(),
 			| Self::FeatureDisabled(..) => Unrecognized,
 			| _ => Unknown,
@@ -205,7 +208,9 @@ impl Error {
 	/// often used as a special case to eliminate a contained Option with a
 	/// Result where Ok(None) is instead Err(e) if e.is_not_found().
 	#[inline]
-	pub fn is_not_found(&self) -> bool { self.status_code() == http::StatusCode::NOT_FOUND }
+	pub fn is_not_found(&self) -> bool {
+		self.status_code() == http::StatusCode::NOT_FOUND
+	}
 
 	pub fn retry_after(&self) -> Option<std::time::Duration> {
 		if let BadRequest(ErrorKind::LimitExceeded(limit_data), ..) = self {
@@ -226,7 +231,9 @@ impl std::fmt::Debug for Error {
 impl<T> From<PoisonError<T>> for Error {
 	#[cold]
 	#[inline(never)]
-	fn from(e: PoisonError<T>) -> Self { Self::Poison(e.to_string().into()) }
+	fn from(e: PoisonError<T>) -> Self {
+		Self::Poison(e.to_string().into())
+	}
 }
 
 #[allow(clippy::fallible_impl_from)]
@@ -248,7 +255,9 @@ pub fn infallible(_e: &Infallible) {
 #[inline]
 #[must_use]
 #[allow(clippy::needless_pass_by_value)]
-pub fn sanitized_message(e: Error) -> String { e.sanitized_message() }
+pub fn sanitized_message(e: Error) -> String {
+	e.sanitized_message()
+}
 
 #[derive(Debug)]
 pub struct FormattedReqwestError(reqwest::Error);
@@ -256,11 +265,15 @@ pub struct FormattedReqwestError(reqwest::Error);
 impl std::ops::Deref for FormattedReqwestError {
 	type Target = reqwest::Error;
 
-	fn deref(&self) -> &Self::Target { &self.0 }
+	fn deref(&self) -> &Self::Target {
+		&self.0
+	}
 }
 
 impl std::error::Error for FormattedReqwestError {
-	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> { self.0.source() }
+	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+		self.0.source()
+	}
 }
 
 impl std::fmt::Display for FormattedReqwestError {
@@ -281,13 +294,19 @@ impl std::fmt::Display for FormattedReqwestError {
 }
 
 impl From<reqwest::Error> for FormattedReqwestError {
-	fn from(err: reqwest::Error) -> Self { Self(err) }
+	fn from(err: reqwest::Error) -> Self {
+		Self(err)
+	}
 }
 
 impl From<reqwest::Error> for Error {
-	fn from(err: reqwest::Error) -> Self { Self::Reqwest(err.into()) }
+	fn from(err: reqwest::Error) -> Self {
+		Self::Reqwest(err.into())
+	}
 }
 
 impl From<FormattedReqwestError> for reqwest::Error {
-	fn from(val: FormattedReqwestError) -> Self { val.0 }
+	fn from(val: FormattedReqwestError) -> Self {
+		val.0
+	}
 }

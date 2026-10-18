@@ -59,11 +59,15 @@ pub mod v3 {
 
 	impl Request {
 		#[must_use]
-		pub fn new() -> Self { Self {} }
+		pub fn new() -> Self {
+			Self {}
+		}
 	}
 
 	impl Response {
 		#[must_use]
-		pub fn new(pushers: Vec<PusherWithActivation>) -> Self { Self { pushers } }
+		pub fn new(pushers: Vec<PusherWithActivation>) -> Self {
+			Self { pushers }
+		}
 	}
 }

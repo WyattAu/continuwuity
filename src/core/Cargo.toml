@@ -116,6 +116,7 @@ parking_lot.workspace = true
 opentelemetry.workspace = true
 opentelemetry-semantic-conventions.workspace = true
 prometheus.workspace = true
+metrics-kit.workspace = true
 lock_api.workspace = true
 hyper-util.workspace = true
 resolvematrix.workspace = true

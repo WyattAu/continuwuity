@@ -92,7 +92,9 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 struct UiaaSession {
@@ -115,8 +117,9 @@ impl UiaaSessionMetadata {
 	fn into_identity(self) -> Identity {
 		match self {
 			| Self::Legacy { identity } => identity,
-			| Self::OAuth { localpart, .. } =>
-				assign!(Identity::default(), { localpart: Some(localpart) }),
+			| Self::OAuth { localpart, .. } => {
+				assign!(Identity::default(), { localpart: Some(localpart) })
+			},
 		}
 	}
 }
@@ -521,8 +524,9 @@ impl Service {
 				#[allow(clippy::useless_let_if_seq)]
 				| AuthData::Password(Password { identifier, password, .. }) => {
 					let user_id_or_localpart = match identifier {
-						| UserIdentifier::Matrix(MatrixUserIdentifier { user, .. }) =>
-							user.to_owned(),
+						| UserIdentifier::Matrix(MatrixUserIdentifier { user, .. }) => {
+							user.to_owned()
+						},
 						| UserIdentifier::Email(EmailUserIdentifier { address, .. }) => {
 							let Ok(email) = Address::try_from(address.to_owned()) else {
 								return Err(StandardErrorBody::new(
@@ -544,11 +548,12 @@ impl Service {
 								));
 							}
 						},
-						| _ =>
+						| _ => {
 							return Err(StandardErrorBody::new(
 								ErrorKind::Unrecognized,
 								"Identifier type not recognized".to_owned(),
-							)),
+							));
+						},
 					};
 
 					let Ok(user_id) = UserId::parse_with_server_name(

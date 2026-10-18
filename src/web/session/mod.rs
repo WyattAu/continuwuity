@@ -45,7 +45,9 @@ pub(crate) enum LoginTarget {
 }
 
 impl PartialEq for LoginTarget {
-	fn eq(&self, other: &Self) -> bool { discriminant(self) == discriminant(other) }
+	fn eq(&self, other: &Self) -> bool {
+		discriminant(self) == discriminant(other)
+	}
 }
 
 impl LoginTarget {
@@ -61,14 +63,17 @@ impl LoginTarget {
 			| Self::ChangeEmail => "account/email/change/".into(),
 			| Self::CrossSigningReset => "account/cross_signing_reset".into(),
 			| Self::Deactivate => "account/deactivate".into(),
-			| Self::DeviceCode(code) =>
+			| Self::DeviceCode(code) => {
 				format!("oauth2/grant/device_code?{}", serde_urlencoded::to_string(code).unwrap())
-					.into(),
-			| Self::DeviceInfo(path) =>
-				format!("account/device/{}/", urlencode_strict(&path.device).unwrap()).into(),
-			| Self::RemoveDevice(path) =>
+					.into()
+			},
+			| Self::DeviceInfo(path) => {
+				format!("account/device/{}/", urlencode_strict(&path.device).unwrap()).into()
+			},
+			| Self::RemoveDevice(path) => {
 				format!("account/device/{}/remove", urlencode_strict(&path.device).unwrap())
-					.into(),
+					.into()
+			},
 		};
 
 		format!("{ROUTE_PREFIX}/{path}")
@@ -113,7 +118,9 @@ impl User {
 
 impl<const ALLOW_LOCKED: bool> User<ALLOW_LOCKED> {
 	/// Consume this extractor and return the user's session information.
-	pub(crate) fn into_session(self) -> Option<UserSession> { self.0 }
+	pub(crate) fn into_session(self) -> Option<UserSession> {
+		self.0
+	}
 
 	/// Extract the user ID, redirecting to the login page if the user isn't
 	/// logged in.

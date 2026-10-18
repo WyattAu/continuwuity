@@ -36,8 +36,9 @@ pub(crate) async fn get_hierarchy_route(
 		.await?;
 
 	match hierarchy {
-		| Accessibility::Accessible(rooms) =>
-			Ok(assign!(get_hierarchy::v1::Response::new(), { rooms: rooms })),
+		| Accessibility::Accessible(rooms) => {
+			Ok(assign!(get_hierarchy::v1::Response::new(), { rooms: rooms }))
+		},
 		| Accessibility::Inaccessible => {
 			Err!(Request(Forbidden("You may not preview this room."), FORBIDDEN))
 		},

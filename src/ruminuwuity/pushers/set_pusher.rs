@@ -38,12 +38,16 @@ pub mod v3 {
 
 	impl Request {
 		#[must_use]
-		pub fn new(action: PusherAction) -> Self { Self { action } }
+		pub fn new(action: PusherAction) -> Self {
+			Self { action }
+		}
 	}
 
 	impl Response {
 		#[must_use]
-		pub fn new(needs_activation: bool) -> Self { Self { needs_activation } }
+		pub fn new(needs_activation: bool) -> Self {
+			Self { needs_activation }
+		}
 	}
 
 	#[cfg(feature = "server")]

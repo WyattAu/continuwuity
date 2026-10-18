@@ -726,8 +726,7 @@ async fn stripped_state_event(
 				.get_field::<StateEventType>("type")
 				.ok()
 				.flatten()
-				.as_ref()
-				== Some(event_type)
+				.as_ref() == Some(event_type)
 		})
 }
 
@@ -1356,8 +1355,9 @@ fn extension_scope<'a>(
 	if let Some(rooms) = rooms {
 		for room in rooms {
 			match room {
-				| ExtensionRoomConfig::AllSubscribed =>
-					scope.extend(subscribed_rooms.iter().cloned()),
+				| ExtensionRoomConfig::AllSubscribed => {
+					scope.extend(subscribed_rooms.iter().cloned())
+				},
 				| ExtensionRoomConfig::Room(room_id) if subscribed_rooms.contains(room_id) => {
 					scope.insert(room_id.clone());
 				},
@@ -1656,9 +1656,13 @@ mod tests {
 
 	use super::*;
 
-	fn custom_room_type() -> RoomTypeFilter { RoomTypeFilter::from(Some("com.example")) }
+	fn custom_room_type() -> RoomTypeFilter {
+		RoomTypeFilter::from(Some("com.example"))
+	}
 
-	fn response() -> sync_events::v5::Response { sync_events::v5::Response::new("1".to_owned()) }
+	fn response() -> sync_events::v5::Response {
+		sync_events::v5::Response::new("1".to_owned())
+	}
 
 	fn typing_scope_request() -> sync_events::v5::Request {
 		let mut request = sync_events::v5::Request::new();
@@ -1754,13 +1758,10 @@ mod tests {
 	#[test]
 	fn account_data_is_not_empty() {
 		let mut response = response();
-		response
-			.extensions
-			.account_data
-			.rooms
-			.insert(owned_room_id!("!a:example.com"), vec![
-				Raw::from_json_string("{}".to_owned()).unwrap(),
-			]);
+		response.extensions.account_data.rooms.insert(
+			owned_room_id!("!a:example.com"),
+			vec![Raw::from_json_string("{}".to_owned()).unwrap()],
+		);
 
 		assert!(!response_is_empty(&response));
 	}

@@ -195,9 +195,10 @@ impl super::Service {
 			.federation_outgoing_request_duration
 			.record(elapsed.as_secs_f64(), &[KeyValue::new("outcome", outcome)]);
 		match response {
-			| Ok(response) =>
+			| Ok(response) => {
 				self.handle_response::<T>(dest, actual, &method, &url, response)
-					.await,
+					.await
+			},
 			| Err(error) => {
 				// This awful wrapping hack is required because `reqwest::Error`
 				// does not implement `Clone`, but we need to convert it
@@ -379,5 +380,7 @@ impl FederationPathBuilderInput for () {
 }
 
 impl FederationPathBuilderInput for Cow<'_, SupportedVersions> {
-	fn create() -> Self { Cow::Borrowed(&SUPPORTED_VERSIONS) }
+	fn create() -> Self {
+		Cow::Borrowed(&SUPPORTED_VERSIONS)
+	}
 }

@@ -59,11 +59,15 @@ pub enum JoinConditionEntity<'id> {
 }
 
 impl<'id> From<&'id UserId> for JoinConditionEntity<'id> {
-	fn from(value: &'id UserId) -> Self { Self::User(value) }
+	fn from(value: &'id UserId) -> Self {
+		Self::User(value)
+	}
 }
 
 impl<'id> From<&'id ServerName> for JoinConditionEntity<'id> {
-	fn from(value: &'id ServerName) -> Self { Self::Server(value) }
+	fn from(value: &'id ServerName) -> Self {
+		Self::Server(value)
+	}
 }
 
 pub struct Service {
@@ -118,7 +122,9 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -184,8 +190,7 @@ impl Service {
 				.services
 				.antispam
 				.meowlnir_accept_make_join(room_id.to_owned(), sender_user.to_owned())
-				.await
-				!= JoinConditionResult::Satisfied
+				.await != JoinConditionResult::Satisfied
 			{
 				warn!("Antispam prevented user {} from joining room {}", sender_user, room_id);
 				return Err!(Request(Forbidden("Antispam rejected join request.")));
@@ -265,8 +270,7 @@ impl Service {
 				// requirements locally.
 				if self
 					.evaluate_join_conditions(room_id, sender_user.into(), conditions)
-					.await
-					== JoinConditionResult::Satisfied
+					.await == JoinConditionResult::Satisfied
 				{
 					// Try to find an authorizing user. If we can't find one,
 					// the local join will fail to authorize and we'll fall back
@@ -905,16 +909,18 @@ impl Service {
 					.await
 				{
 					let is_joined = match entity {
-						| JoinConditionEntity::User(user_id) =>
+						| JoinConditionEntity::User(user_id) => {
 							self.services
 								.state_cache
 								.is_joined(user_id, condition_room)
-								.await,
-						| JoinConditionEntity::Server(server) =>
+								.await
+						},
+						| JoinConditionEntity::Server(server) => {
 							self.services
 								.state_cache
 								.server_in_room(server, room_id)
-								.await,
+								.await
+						},
 					};
 
 					if is_joined {

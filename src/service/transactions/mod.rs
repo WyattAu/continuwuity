@@ -120,7 +120,9 @@ impl crate::Service for Service {
 		state.retain(|_, v| matches!(v, TxnState::Active(_)));
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -198,8 +200,7 @@ impl Service {
 			&& let active_count = state
 				.values()
 				.filter(|v| matches!(v, TxnState::Active(_)))
-				.count()
-			&& active_count >= max_active_txns
+				.count() && active_count >= max_active_txns
 		{
 			warn!(
 				active = active_count,

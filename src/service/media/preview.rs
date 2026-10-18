@@ -54,7 +54,9 @@ impl Service {
 		std::future::ready(self.db.remove_url_preview(url))
 	}
 
-	pub async fn clear_url_previews(&self) { self.db.clear_url_previews().await; }
+	pub async fn clear_url_previews(&self) {
+		self.db.clear_url_previews().await;
+	}
 
 	pub fn set_url_preview(
 		&self,
@@ -114,10 +116,12 @@ impl Service {
 		let data = match content_type {
 			| html if html.starts_with("text/html") => self.download_html(url.as_str()).await?,
 			| img if img.starts_with("image/") => self.download_image(url.as_str(), None).await?,
-			| video if video.starts_with("video/") =>
-				self.download_video(url.as_str(), None).await?,
-			| audio if audio.starts_with("audio/") =>
-				self.download_audio(url.as_str(), None).await?,
+			| video if video.starts_with("video/") => {
+				self.download_video(url.as_str(), None).await?
+			},
+			| audio if audio.starts_with("audio/") => {
+				self.download_audio(url.as_str(), None).await?
+			},
 			| _ => return Err!(Request(Unknown("Unsupported Content-Type"))),
 		};
 

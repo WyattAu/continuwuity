@@ -26,11 +26,15 @@ pub mod unstable {
 
 	impl Request {
 		#[must_use]
-		pub fn new(app_id: String, ack_token: String) -> Self { Self { app_id, ack_token } }
+		pub fn new(app_id: String, ack_token: String) -> Self {
+			Self { app_id, ack_token }
+		}
 	}
 
 	impl Response {
 		#[must_use]
-		pub fn new() -> Self { Self {} }
+		pub fn new() -> Self {
+			Self {}
+		}
 	}
 }

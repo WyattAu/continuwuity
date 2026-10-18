@@ -247,9 +247,10 @@ async fn route_device_code(
 
 			response!(DeviceCodeGrant::new(context, user_card, DeviceCodeGrantBody::Success))
 		},
-		| (None, None) =>
-			response!(DeviceCodeGrant::new(context, user_card, DeviceCodeGrantBody::Lookup {
-				user_code_error: false
-			})),
+		| (None, None) => response!(DeviceCodeGrant::new(
+			context,
+			user_card,
+			DeviceCodeGrantBody::Lookup { user_code_error: false }
+		)),
 	}
 }

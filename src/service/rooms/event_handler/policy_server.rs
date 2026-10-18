@@ -140,13 +140,14 @@ impl super::Service {
 			.await
 		{
 			| Ok(s) => s,
-			| Err(e) =>
+			| Err(e) => {
 				return if e.is_not_found() || e.kind() == ErrorKind::BadJson {
 					debug!(%e, "no policy server configured");
 					Ok(())
 				} else {
 					Err!("failed to load m.room.policy state event: {e}")
-				},
+				};
+			},
 		};
 
 		let Some(ps_key) = ps.public_keys.get(&SigningKeyAlgorithm::Ed25519) else {

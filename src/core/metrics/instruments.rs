@@ -128,9 +128,13 @@ impl Instruments {
 }
 
 #[must_use]
-pub fn duration_buckets() -> Vec<f64> { (0..16).map(|i| 0.001 * f64::from(1_u32 << i)).collect() }
+pub fn duration_buckets() -> Vec<f64> {
+	(0..16).map(|i| 0.001 * f64::from(1_u32 << i)).collect()
+}
 
-fn size_buckets() -> Vec<f64> { (0..11).map(|i| 1024.0 * f64::from(4_u32.pow(i))).collect() }
+fn size_buckets() -> Vec<f64> {
+	(0..11).map(|i| 1024.0 * f64::from(4_u32.pow(i))).collect()
+}
 
 fn register_process(meter: &Meter) {
 	let started = Instant::now();
@@ -151,10 +155,10 @@ fn register_process(meter: &Meter) {
 			if let Some((user, system)) = process::cpu_time() {
 				observer
 					.observe(user.as_secs_f64(), &[KeyValue::new(attribute::CPU_MODE, "user")]);
-				observer.observe(system.as_secs_f64(), &[KeyValue::new(
-					attribute::CPU_MODE,
-					"system",
-				)]);
+				observer.observe(
+					system.as_secs_f64(),
+					&[KeyValue::new(attribute::CPU_MODE, "system")],
+				);
 			}
 		})
 		.build();

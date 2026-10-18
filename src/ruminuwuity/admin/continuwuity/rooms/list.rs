@@ -25,11 +25,15 @@ pub mod v1 {
 
 	impl Request {
 		#[must_use]
-		pub fn new() -> Self { Self::default() }
+		pub fn new() -> Self {
+			Self::default()
+		}
 	}
 
 	impl Response {
 		#[must_use]
-		pub fn new(rooms: Vec<OwnedRoomId>) -> Self { Self { rooms } }
+		pub fn new(rooms: Vec<OwnedRoomId>) -> Self {
+			Self { rooms }
+		}
 	}
 }

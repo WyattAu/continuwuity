@@ -13,7 +13,9 @@ use crate::{
 	response, template,
 };
 
-pub(crate) fn build() -> Router<crate::State> { Router::new().route("/", get(get_about)) }
+pub(crate) fn build() -> Router<crate::State> {
+	Router::new().route("/", get(get_about))
+}
 
 template! {
 	struct About use "about.html.j2" {

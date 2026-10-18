@@ -46,10 +46,14 @@ pub enum AccountStatus {
 
 impl AccountStatus {
 	#[must_use]
-	pub fn is_found(&self) -> bool { !matches!(self, Self::NotFound) }
+	pub fn is_found(&self) -> bool {
+		!matches!(self, Self::NotFound)
+	}
 
 	#[must_use]
-	pub fn is_active(&self) -> bool { matches!(self, Self::Active) }
+	pub fn is_active(&self) -> bool {
+		matches!(self, Self::Active)
+	}
 
 	pub fn ensure_active(&self) -> Result<()> {
 		match self {
@@ -409,8 +413,7 @@ impl super::Service {
 				.services
 				.appservice
 				.is_exclusive_user_id(&user_id)
-				.await
-				&& !emergency_mode_enabled
+				.await && !emergency_mode_enabled
 			{
 				return Err!(Request(Exclusive("Username is reserved by an appservice.")));
 			}
@@ -488,7 +491,9 @@ impl super::Service {
 	}
 
 	/// Unlocks an account, allowing the user to log in and use it again.
-	pub async fn unlock_account(&self, user_id: &UserId) { self.db.userid_lock.remove(user_id); }
+	pub async fn unlock_account(&self, user_id: &UserId) {
+		self.db.userid_lock.remove(user_id);
+	}
 
 	/// Check if account is suspended. Returns false if the user does not exist.
 	pub async fn is_suspended(&self, user_id: &UserId) -> Result<bool> {
@@ -500,12 +505,13 @@ impl super::Service {
 			.deserialized::<UserSuspension>()
 		{
 			| Ok(s) => Ok(s.suspended),
-			| Err(e) =>
+			| Err(e) => {
 				if e.is_not_found() {
 					Ok(false)
 				} else {
 					Err(e)
-				},
+				}
+			},
 		}
 	}
 
@@ -520,12 +526,13 @@ impl super::Service {
 			.deserialized::<UserSuspension>()
 		{
 			| Ok(s) => Ok(s.suspended),
-			| Err(e) =>
+			| Err(e) => {
 				if e.is_not_found() {
 					Ok(false)
 				} else {
 					Err(e)
-				},
+				}
+			},
 		}
 	}
 
@@ -536,7 +543,9 @@ impl super::Service {
 	}
 
 	/// Re-enables login for a user, allowing them to create new devices again.
-	pub fn enable_login(&self, user_id: &UserId) { self.db.userid_logindisabled.remove(user_id); }
+	pub fn enable_login(&self, user_id: &UserId) {
+		self.db.userid_logindisabled.remove(user_id);
+	}
 
 	/// Returns true if the target user's login is disabled.
 	pub async fn is_login_disabled(&self, user_id: &UserId) -> bool {
@@ -575,7 +584,9 @@ impl super::Service {
 	/// Returns the number of users registered on this server, including
 	/// deactivated and shadow users.
 	#[inline]
-	pub async fn count(&self) -> usize { self.db.userid_password.count().await }
+	pub async fn count(&self) -> usize {
+		self.db.userid_password.count().await
+	}
 
 	/// Find out which user an access token belongs to. Will panic if the access
 	/// token is empty.

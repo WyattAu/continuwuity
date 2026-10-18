@@ -161,10 +161,13 @@ async fn process_inbound_transaction(
 					.metrics
 					.instruments
 					.federation_incoming_pdus
-					.add(1, &[
-						KeyValue::new("type", pdu_type_label(raw_pdu_type(pdu).as_deref())),
-						KeyValue::new("outcome", "unparsable"),
-					]);
+					.add(
+						1,
+						&[
+							KeyValue::new("type", pdu_type_label(raw_pdu_type(pdu).as_deref())),
+							KeyValue::new("outcome", "unparsable"),
+						],
+					);
 				let queued = services
 					.rooms
 					.event_handler
@@ -380,13 +383,17 @@ async fn handle_room(
 			.await
 			.map(|_| ());
 
-		let outcome = KeyValue::new("outcome", match &result {
-			| Ok(()) => "accepted",
-			| Err(Error::BadRequest(ErrorKind::Forbidden, ..)) => "forbidden",
-			| Err(Error::BadRequest(ErrorKind::InvalidParam | ErrorKind::BadJson, ..)) =>
-				"invalid",
-			| Err(_) => "error",
-		});
+		let outcome = KeyValue::new(
+			"outcome",
+			match &result {
+				| Ok(()) => "accepted",
+				| Err(Error::BadRequest(ErrorKind::Forbidden, ..)) => "forbidden",
+				| Err(Error::BadRequest(ErrorKind::InvalidParam | ErrorKind::BadJson, ..)) => {
+					"invalid"
+				},
+				| Err(_) => "error",
+			},
+		);
 		let instruments = &services.server.metrics.instruments;
 		instruments
 			.federation_incoming_pdu_duration
@@ -418,23 +425,29 @@ async fn handle_edu(services: &Services, origin: &ServerName, edu: Edu) {
 	};
 	let start = Instant::now();
 	match edu {
-		| Edu::Presence(presence) if services.server.config.allow_incoming_presence =>
-			handle_edu_presence(services, origin, presence).await,
+		| Edu::Presence(presence) if services.server.config.allow_incoming_presence => {
+			handle_edu_presence(services, origin, presence).await
+		},
 
-		| Edu::Receipt(receipt) if services.server.config.allow_incoming_read_receipts =>
-			handle_edu_receipt(services, origin, receipt).await,
+		| Edu::Receipt(receipt) if services.server.config.allow_incoming_read_receipts => {
+			handle_edu_receipt(services, origin, receipt).await
+		},
 
-		| Edu::Typing(typing) if services.server.config.allow_incoming_typing =>
-			handle_edu_typing(services, origin, typing).await,
+		| Edu::Typing(typing) if services.server.config.allow_incoming_typing => {
+			handle_edu_typing(services, origin, typing).await
+		},
 
-		| Edu::DeviceListUpdate(content) =>
-			handle_edu_device_list_update(services, origin, content).await,
+		| Edu::DeviceListUpdate(content) => {
+			handle_edu_device_list_update(services, origin, content).await
+		},
 
-		| Edu::DirectToDevice(content) =>
-			handle_edu_direct_to_device(services, origin, content).await,
+		| Edu::DirectToDevice(content) => {
+			handle_edu_direct_to_device(services, origin, content).await
+		},
 
-		| Edu::SigningKeyUpdate(content) =>
-			handle_edu_signing_key_update(services, origin, content).await,
+		| Edu::SigningKeyUpdate(content) => {
+			handle_edu_signing_key_update(services, origin, content).await
+		},
 
 		| Edu::_Custom(ref _custom) => debug_warn!(?edu, "received custom/unknown EDU"),
 

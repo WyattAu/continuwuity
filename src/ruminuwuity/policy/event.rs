@@ -21,7 +21,9 @@ pub struct RoomPolicyEventContent {
 impl RoomPolicyEventContent {
 	/// Create an empty `RoomPolicyEventContent`.
 	#[must_use]
-	pub fn new() -> Self { Self::default() }
+	pub fn new() -> Self {
+		Self::default()
+	}
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -34,11 +36,15 @@ impl PolicyServerResponseContent {
 	/// Create a new `PolicyServerResponseContent` with the given
 	/// recommendation.
 	#[must_use]
-	pub fn new(recommendation: String) -> Self { Self { recommendation } }
+	pub fn new(recommendation: String) -> Self {
+		Self { recommendation }
+	}
 }
 
 impl From<String> for PolicyServerResponseContent {
-	fn from(recommendation: String) -> Self { Self::new(recommendation) }
+	fn from(recommendation: String) -> Self {
+		Self::new(recommendation)
+	}
 }
 
 #[cfg(test)]

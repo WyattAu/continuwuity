@@ -27,16 +27,22 @@ pub struct DeviceToken {
 impl DeviceToken {
 	const ACCESS_TOKEN_LENGTH: usize = 24;
 
-	pub fn new(token: String) -> Self { Self { token, max_age: None } }
+	pub fn new(token: String) -> Self {
+		Self { token, max_age: None }
+	}
 
-	pub fn new_random() -> Self { Self::new(utils::random_string(Self::ACCESS_TOKEN_LENGTH)) }
+	pub fn new_random() -> Self {
+		Self::new(utils::random_string(Self::ACCESS_TOKEN_LENGTH))
+	}
 
 	pub fn with_max_age(self, max_age: Duration) -> Self {
 		assign!(self, { max_age: Some(max_age) })
 	}
 
 	#[must_use]
-	pub fn into_token(self) -> String { self.token }
+	pub fn into_token(self) -> String {
+		self.token
+	}
 }
 
 impl super::Service {

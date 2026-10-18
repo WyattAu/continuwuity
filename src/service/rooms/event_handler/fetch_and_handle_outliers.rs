@@ -45,7 +45,9 @@ impl DagBuilderTree {
 }
 
 impl Display for DagBuilderTree {
-	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { f.write_str(self.as_str()) }
+	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+		f.write_str(self.as_str())
+	}
 }
 
 /// Attempts to build a localised directed acyclic graph out of the given PDUs,

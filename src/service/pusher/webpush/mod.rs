@@ -80,7 +80,9 @@ struct WebPushBackoff {
 }
 
 impl Service {
-	pub fn webpush_vapid_public_key(&self) -> &str { self.vapid.public_key() }
+	pub fn webpush_vapid_public_key(&self) -> &str {
+		self.vapid.public_key()
+	}
 
 	/// Reports whether a Web Push pusher has completed its activation
 	/// handshake.

@@ -40,7 +40,9 @@ where
 	}
 
 	impl<T> IntMapVisitor<T> {
-		fn new() -> Self { Self { _phantom: PhantomData } }
+		fn new() -> Self {
+			Self { _phantom: PhantomData }
+		}
 	}
 
 	impl<'de, T> Visitor<'de> for IntMapVisitor<T>
@@ -90,7 +92,9 @@ where
 	}
 
 	impl<T> IntMapVisitor<T> {
-		fn new() -> Self { Self { _phantom: PhantomData } }
+		fn new() -> Self {
+			Self { _phantom: PhantomData }
+		}
 	}
 
 	impl<'de, T> Visitor<'de> for IntMapVisitor<T>

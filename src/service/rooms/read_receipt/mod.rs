@@ -54,7 +54,9 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -202,7 +204,7 @@ where
 			value.json().get(),
 		);
 		match receipt {
-			| Ok(value) =>
+			| Ok(value) => {
 				for (event, receipt_types) in value.content {
 					let event_receipts = json.entry(event).or_default();
 					for (receipt_type, users) in receipt_types {
@@ -211,7 +213,8 @@ where
 							.or_default()
 							.extend(users);
 					}
-				},
+				}
+			},
 			| _ => {
 				debug!("failed to parse receipt: {:?}", receipt);
 			},

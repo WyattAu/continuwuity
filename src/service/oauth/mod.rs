@@ -179,7 +179,9 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -192,7 +194,9 @@ impl Service {
 	const USER_CODE_CHARACTERS: &[char] = &['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 	const USER_CODE_LENGTH: usize = 6;
 
-	fn generate_token() -> String { utils::random_string(Self::RANDOM_TOKEN_LENGTH) }
+	fn generate_token() -> String {
+		utils::random_string(Self::RANDOM_TOKEN_LENGTH)
+	}
 
 	fn generate_user_code() -> String {
 		Choose::new(Self::USER_CODE_CHARACTERS)
@@ -438,12 +442,13 @@ impl Service {
 			},
 			| DeviceCodeGrantState::Verified {
 				authorizing_user: previous_authorizing_user,
-			} =>
+			} => {
 				if *previous_authorizing_user == authorizing_user {
 					Ok(())
 				} else {
 					Err("Device code is already verified".to_owned())
-				},
+				}
+			},
 		}
 	}
 
@@ -509,18 +514,20 @@ impl Service {
 							"Authorization is pending",
 						))
 					},
-					| DeviceCodeGrantState::Verified { authorizing_user } =>
+					| DeviceCodeGrantState::Verified { authorizing_user } => {
 						self.create_session(
 							authorizing_user.to_owned(),
 							pending_grant.requested_scopes,
 							pending_grant.client_name,
 							client_id,
 						)
-						.await,
+						.await
+					},
 				}
 			},
-			| TokenRequestType::RefreshToken { refresh_token } =>
-				self.refresh_session(client_id, refresh_token).await,
+			| TokenRequestType::RefreshToken { refresh_token } => {
+				self.refresh_session(client_id, refresh_token).await
+			},
 		}
 	}
 

@@ -36,7 +36,9 @@ pub mod unstable {
 	impl Response {
 		/// Creates a new `Response` with the given recommendation.
 		#[must_use]
-		pub fn new(signatures: Option<ServerSignatures>) -> Self { Self { signatures } }
+		pub fn new(signatures: Option<ServerSignatures>) -> Self {
+			Self { signatures }
+		}
 	}
 
 	/// Request type for the `sign` endpoint.
@@ -50,6 +52,8 @@ pub mod unstable {
 	impl Request {
 		/// Creates a new `Request` with the given event JSON
 		#[must_use]
-		pub fn new(pdu: Box<RawJsonValue>) -> Self { Self { pdu } }
+		pub fn new(pdu: Box<RawJsonValue>) -> Self {
+			Self { pdu }
+		}
 	}
 }

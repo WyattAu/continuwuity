@@ -157,9 +157,13 @@ impl crate::Service for Service {
 		}
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 
-	fn unconstrained(&self) -> bool { true }
+	fn unconstrained(&self) -> bool {
+		true
+	}
 }
 
 impl Service {
@@ -289,8 +293,7 @@ impl Service {
 					.services
 					.state_cache
 					.appservice_in_room(room_id, &appservice)
-					.await
-				|| matching_aliases(appservice.aliases.clone()).await
+					.await || matching_aliases(appservice.aliases.clone()).await
 			{
 				_ = self
 					.send_edu_appservice(&appservice.registration.id, serialized.clone())
@@ -488,14 +491,10 @@ impl Service {
 			| SendingEvent::Flush => None,
 		};
 		if let Some(kind) = kind {
-			self.server
-				.metrics
-				.instruments
-				.sender_events_queued
-				.add(1, &[
-					KeyValue::new("destination", msg.dest.kind()),
-					KeyValue::new("kind", kind),
-				]);
+			self.server.metrics.instruments.sender_events_queued.add(
+				1,
+				&[KeyValue::new("destination", msg.dest.kind()), KeyValue::new("kind", kind)],
+			);
 		}
 
 		debug_assert!(!sender.is_full(), "channel full");

@@ -91,7 +91,9 @@ impl crate::Service for Service {
 		Ok(())
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -178,11 +180,12 @@ impl Service {
 
 		if !already_existed {
 			let states_parents = match previous_shortstatehash {
-				| Ok(p) =>
+				| Ok(p) => {
 					self.services
 						.state_compressor
 						.load_shortstatehash_info(p)
-						.await?,
+						.await?
+				},
 				| _ => Vec::new(),
 			};
 
@@ -244,11 +247,12 @@ impl Service {
 		match &new_pdu.state_key {
 			| Some(state_key) => {
 				let states_parents = match previous_shortstatehash {
-					| Ok(p) =>
+					| Ok(p) => {
 						self.services
 							.state_compressor
 							.load_shortstatehash_info(p)
-							.await?,
+							.await?
+					},
 					| _ => Vec::new(),
 				};
 
@@ -298,8 +302,9 @@ impl Service {
 
 				Ok(shortstatehash)
 			},
-			| _ =>
-				Ok(previous_shortstatehash.expect("first event in room must be a state event")),
+			| _ => {
+				Ok(previous_shortstatehash.expect("first event in room must be a state event"))
+			},
 		}
 	}
 

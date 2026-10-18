@@ -128,14 +128,18 @@ async fn get_account(
 
 	let suspended = services.users.is_suspended(&user_id).await.unwrap();
 
-	response!(Account::new(context, user_card, AccountBody::Unlocked {
-		suspended,
-		oidc_enabled: services.oidc.enabled(),
-		email_requirement,
-		email,
-		devices: device_cards,
-		dehydrated_device_id,
-	}))
+	response!(Account::new(
+		context,
+		user_card,
+		AccountBody::Unlocked {
+			suspended,
+			oidc_enabled: services.oidc.enabled(),
+			email_requirement,
+			email,
+			devices: device_cards,
+			dehydrated_device_id,
+		}
+	))
 }
 
 #[derive(Deserialize)]

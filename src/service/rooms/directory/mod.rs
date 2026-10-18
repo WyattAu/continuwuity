@@ -22,16 +22,22 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
 	/// Marks a room as public, adding it to the room directory. Has no relation
 	/// to the join rule.
-	pub fn set_public(&self, room_id: &RoomId) { self.db.publicroomids.insert(room_id, []); }
+	pub fn set_public(&self, room_id: &RoomId) {
+		self.db.publicroomids.insert(room_id, []);
+	}
 
 	/// Removes a room from the public room directory.
-	pub fn set_not_public(&self, room_id: &RoomId) { self.db.publicroomids.remove(room_id); }
+	pub fn set_not_public(&self, room_id: &RoomId) {
+		self.db.publicroomids.remove(room_id);
+	}
 
 	/// Lists all public rooms in the directory.
 	pub fn public_rooms(&self) -> impl Stream<Item = OwnedRoomId> + Send {

@@ -53,13 +53,15 @@ impl ClientIp {
 	fn for_source(source: &str) -> Option<PartsToIpFn> {
 		match source {
 			| "cf_connecting_ip" => Some(Self::from_header(client_ip::cf_connecting_ip)),
-			| "cloudfront_viewer_address" =>
-				Some(Self::from_header(client_ip::cloudfront_viewer_address)),
+			| "cloudfront_viewer_address" => {
+				Some(Self::from_header(client_ip::cloudfront_viewer_address))
+			},
 			| "fly_client_ip" => Some(Self::from_header(client_ip::fly_client_ip)),
 			| "x_forwarded_for" => Some(Self::from_header(client_ip::rightmost_x_forwarded_for)),
 			| "true_client_ip" => Some(Self::from_header(client_ip::true_client_ip)),
-			| "x_envoy_external_address" =>
-				Some(Self::from_header(client_ip::x_envoy_external_address)),
+			| "x_envoy_external_address" => {
+				Some(Self::from_header(client_ip::x_envoy_external_address))
+			},
 			| "x_real_ip" => Some(Self::from_header(client_ip::x_real_ip)),
 			| "direct" => Some(Box::new(Self::from_connection_info)),
 			| s => {

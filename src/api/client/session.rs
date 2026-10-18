@@ -138,8 +138,9 @@ pub(crate) async fn login_route(
 	// Validate login method
 	let user_id = match &body.login_info {
 		#[allow(deprecated)]
-		| LoginInfo::Password(login::v3::Password { identifier, password, user, .. }) =>
-			handle_login(&services, identifier.as_ref(), password, user.as_ref()).await?,
+		| LoginInfo::Password(login::v3::Password { identifier, password, user, .. }) => {
+			handle_login(&services, identifier.as_ref(), password, user.as_ref()).await?
+		},
 		| LoginInfo::Token(login::v3::Token { token, .. }) => {
 			debug!("Got token login type");
 			if !services.server.config.login_via_existing_session {
