@@ -97,10 +97,13 @@ async fn route_complete(
 				.map_err(|err| WebError::BadRequest(err.to_owned()))?;
 
 			session_store
-				.insert(OIDC_SESSION_ID_KEY, OidcSession {
-					next: session.next.clone(),
-					state: OidcSessionState::Authorized { claims: Box::new(claims.clone()) },
-				})
+				.insert(
+					OIDC_SESSION_ID_KEY,
+					OidcSession {
+						next: session.next.clone(),
+						state: OidcSessionState::Authorized { claims: Box::new(claims.clone()) },
+					},
+				)
 				.await
 				.expect("should be able to serialize oidc session");
 
@@ -185,10 +188,13 @@ async fn route_complete(
 			response!(Redirect::to(&session.next.target_path()))
 		},
 		| SessionCompletionStatus::NeedsUserId => {
-			response!(OidcComplete::new(context, OidcCompleteBody::UsernamePrompt {
-				server_name: services.globals.server_name().to_owned(),
-				username_error: None
-			}))
+			response!(OidcComplete::new(
+				context,
+				OidcCompleteBody::UsernamePrompt {
+					server_name: services.globals.server_name().to_owned(),
+					username_error: None
+				}
+			))
 		},
 	}
 }

@@ -44,7 +44,9 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -246,5 +248,7 @@ impl Service {
 		(cache.len(), cache.capacity())
 	}
 
-	pub fn clear_cache(&self) { self.db.auth_chain_cache.lock().clear(); }
+	pub fn clear_cache(&self) {
+		self.db.auth_chain_cache.lock().clear();
+	}
 }

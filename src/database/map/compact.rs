@@ -50,8 +50,9 @@ impl super::Map {
 				co.set_change_level(false);
 				co.set_target_level(level.try_into()?);
 			},
-			| (Some(_), Some(_)) =>
-				return Err!("compacting between specific levels not supported"),
+			| (Some(_), Some(_)) => {
+				return Err!("compacting between specific levels not supported");
+			},
 		}
 
 		self.db

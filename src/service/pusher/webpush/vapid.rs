@@ -58,7 +58,9 @@ impl Vapid {
 		})
 	}
 
-	pub(super) fn public_key(&self) -> &str { &self.public_key }
+	pub(super) fn public_key(&self) -> &str {
+		&self.public_key
+	}
 
 	/// Returns a cached or freshly signed VAPID authorization for an endpoint.
 	pub(super) fn authorization(&self, endpoint: &url::Url) -> Result<String> {

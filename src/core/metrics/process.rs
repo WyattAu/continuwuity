@@ -15,7 +15,9 @@ pub(super) fn cpu_time() -> Option<(Duration, Duration)> {
 }
 
 #[cfg(not(unix))]
-pub(super) fn cpu_time() -> Option<(Duration, Duration)> { None }
+pub(super) fn cpu_time() -> Option<(Duration, Duration)> {
+	None
+}
 
 /// Resident and virtual memory in bytes, read from `/proc/self/status`.
 #[cfg(target_os = "linux")]
@@ -31,7 +33,9 @@ pub(super) fn memory() -> Option<(u64, u64)> {
 }
 
 #[cfg(not(target_os = "linux"))]
-pub(super) fn memory() -> Option<(u64, u64)> { None }
+pub(super) fn memory() -> Option<(u64, u64)> {
+	None
+}
 
 #[cfg(target_os = "linux")]
 pub(super) fn open_fds() -> Option<u64> {
@@ -44,4 +48,6 @@ pub(super) fn open_fds() -> Option<u64> {
 }
 
 #[cfg(not(target_os = "linux"))]
-pub(super) fn open_fds() -> Option<u64> { None }
+pub(super) fn open_fds() -> Option<u64> {
+	None
+}

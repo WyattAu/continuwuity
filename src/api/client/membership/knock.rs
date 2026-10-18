@@ -575,8 +575,9 @@ async fn knock_room_helper_remote(
 		.map(|event| {
 			#[allow(deprecated)]
 			let raw_value = match event {
-				| federation::membership::RawStrippedState::Stripped(raw_state) =>
-					&raw_state.clone().into_json(),
+				| federation::membership::RawStrippedState::Stripped(raw_state) => {
+					&raw_state.clone().into_json()
+				},
 				| federation::membership::RawStrippedState::Pdu(raw_value) => raw_value,
 				| _ => panic!("unknown raw stripped state type"),
 			};

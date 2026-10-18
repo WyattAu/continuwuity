@@ -4,6 +4,8 @@ mod tests;
 
 use std::sync::atomic::AtomicU32;
 
+use metrics_kit::{Encoder as KitEncoder, Registry};
+pub use metrics_kit::{Format, Gauge as KitGauge};
 use opentelemetry::metrics::Meter;
 pub use opentelemetry::{KeyValue, metrics::AsyncInstrument};
 pub use prometheus::TEXT_FORMAT as PROMETHEUS_CONTENT_TYPE;
@@ -39,6 +41,7 @@ pub struct Metrics {
 	pub meter: Meter,
 	pub instruments: Instruments,
 	registry: Option<prometheus::Registry>,
+	kit_registry: Registry,
 }
 
 impl Metrics {
@@ -62,6 +65,7 @@ impl Metrics {
 			instruments: Instruments::new(&meter, runtime_metrics.clone()),
 			meter,
 			registry,
+			kit_registry: Registry::with_max_series(8192),
 
 			runtime_metrics,
 
@@ -101,8 +105,25 @@ impl Metrics {
 		Ok(String::from_utf8(buf)?)
 	}
 
+	/// Register a single-series gauge on the metrics-kit registry for the
+	/// OpenMetrics exposition path. Returns `None` when the cardinality
+	/// budget or the duplicate-series contract refuses the registration;
+	/// the caller then proceeds without the kit mirror.
+	pub fn kit_gauge(&self, name: &'static str, help: &'static str) -> Option<KitGauge> {
+		self.kit_registry.gauge(name, help, &[]).ok()
+	}
+
+	/// OpenMetrics text exposition from the metrics-kit registry. Carries
+	/// the single-series gauges only; labelled series remain on the
+	/// Prometheus endpoint.
+	pub fn render_openmetrics(&self) -> Result<String> {
+		Ok(KitEncoder::new(Format::OpenMetrics).encode_to_string(&self.kit_registry))
+	}
+
 	#[inline]
-	pub fn task_root(&self) -> Option<&TaskMonitor> { self.task_monitor.as_ref() }
+	pub fn task_root(&self) -> Option<&TaskMonitor> {
+		self.task_monitor.as_ref()
+	}
 
 	#[inline]
 	pub fn num_workers(&self) -> usize {

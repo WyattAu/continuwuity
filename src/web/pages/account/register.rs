@@ -213,7 +213,7 @@ async fn route_register(
 		let terms = services.config.registration_terms.documents.clone();
 
 		match (query.flow, query.token) {
-			| (Some(RequestedRegistrationFlow::Trusted), token) | (_, token @ Some(_)) =>
+			| (Some(RequestedRegistrationFlow::Trusted), token) | (_, token @ Some(_)) => {
 				RegisterBody::DetailsPrompt {
 					username: query.username,
 					require_email: services
@@ -224,7 +224,8 @@ async fn route_register(
 					flow: RegistrationFlowParameters::Trusted { registration_token: token },
 					terms,
 					validation_errors,
-				},
+				}
+			},
 			| (_, token) if is_first_run => RegisterBody::DetailsPrompt {
 				username: query.username,
 				require_email: false,
@@ -428,8 +429,9 @@ async fn begin_registration(
 		.as_ref()
 		.is_some_and(|smtp| match form.flow {
 			| RequestedRegistrationFlow::Trusted => smtp.require_email_for_token_registration,
-			| RequestedRegistrationFlow::Untrusted =>
-				!open_registration && smtp.require_email_for_registration,
+			| RequestedRegistrationFlow::Untrusted => {
+				!open_registration && smtp.require_email_for_registration
+			},
 		});
 
 	if require_email {

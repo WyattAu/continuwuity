@@ -70,8 +70,9 @@ fn render_node(
 		| NodeStatus::Normal(false) => format!("{evt_str}: {name}"),
 		| NodeStatus::Normal(true) => format!("{evt_str}: {name} (missing locally)"),
 		| NodeStatus::SoftFailed(false) => format!("{evt_str}: {name} (soft-failed)"),
-		| NodeStatus::SoftFailed(true) =>
-			format!("{evt_str}: {name} (soft-failed & missing locally)"),
+		| NodeStatus::SoftFailed(true) => {
+			format!("{evt_str}: {name} (soft-failed & missing locally)")
+		},
 		| NodeStatus::Rejected(false) => format!("{evt_str}: {name} (rejected)"),
 		| NodeStatus::Rejected(true) => format!("{evt_str}: {name} (rejected & missing locally)"),
 	};
@@ -153,7 +154,7 @@ impl crate::Context<'_> {
 			"```mermaid\n%% This is a mermaid graph. You can plug this output into\n\
 		%% https://mermaid.live/edit to visualise it on-the-fly.\nflowchart TD\n\
 		classDef rejected fill:#ffe5e5,stroke:#cc0000,stroke-width:2px,color:#000;\n\
-		classDef soft_failed fill:#fff6cc,stroke:#c9a400,stroke-width:2px,color:#000;\n"
+		classDef soft_failed fill:#fff6cc,stroke:#c9a400,stroke-width:2px,color:#000;\n",
 		);
 
 		let mut node_ids: HashMap<OwnedEventId, String> = HashMap::new();
@@ -295,8 +296,9 @@ impl crate::Context<'_> {
 				| Ok(hash) => {
 					let event_id = EventId::parse(format!("${hash}"));
 					match serde_json::from_value::<PduEvent>(serde_json::to_value(value)?) {
-						| Err(e) =>
-							return Err!("EventId: {event_id:?}\nCould not parse event: {e}"),
+						| Err(e) => {
+							return Err!("EventId: {event_id:?}\nCould not parse event: {e}");
+						},
 						| Ok(pdu) => write!(self, "EventId: {event_id:?}\n{pdu:#?}"),
 					}
 				},
@@ -1223,14 +1225,16 @@ impl crate::Context<'_> {
 		if let Some(specific_server_name) = name {
 			let entry = backoff_map.get(&specific_server_name);
 			return match entry {
-				| Some((retries, next_retry)) =>
+				| Some((retries, next_retry)) => {
 					self.write_str(&format!(
 						"{specific_server_name}: {retries} retries, next retry at {next_retry}"
 					))
-					.await,
-				| None =>
+					.await
+				},
+				| None => {
 					self.write_str(&format!("Server {specific_server_name} is not in backoff."))
-						.await,
+						.await
+				},
 			};
 		}
 

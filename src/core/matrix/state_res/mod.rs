@@ -464,7 +464,9 @@ where
 	where
 		Id: Ord,
 	{
-		fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
+		fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+			Some(self.cmp(other))
+		}
 	}
 
 	debug!("starting lexicographical topological sort");
@@ -633,11 +635,12 @@ where
 	// ID is its event ID.
 	let create_event = match create_event {
 		| Some(create_event) => Some(create_event),
-		| None =>
+		| None => {
 			match OwnedEventId::try_from(event.room_id_or_hash().as_str().replace('!', "$")) {
 				| Ok(create_event_id) => fetch_event(create_event_id).await,
 				| Err(_) => None,
-			},
+			}
+		},
 	};
 
 	let Some(create_event) = create_event else {
@@ -1674,9 +1677,10 @@ mod tests {
 			),
 		];
 
-		let edges = vec![vec!["END", "T4", "MZ1", "PA2", "T2", "PA1", "T1", "START"], vec![
-			"END", "MZ1", "T3", "PB", "PA1",
-		]]
+		let edges = vec![
+			vec!["END", "T4", "MZ1", "PA2", "T2", "PA1", "T1", "START"],
+			vec!["END", "MZ1", "T3", "PB", "PA1"],
+		]
 		.into_iter()
 		.map(|list| list.into_iter().map(event_id).collect::<Vec<_>>())
 		.collect::<Vec<_>>();
@@ -1983,11 +1987,14 @@ mod tests {
 		);
 
 		assert_eq!(unconflicted, StateMap::new());
-		assert_eq!(conflicted, state_set![
-			StateEventType::RoomMember => "@a:hs1" => vec![0],
-			StateEventType::RoomMember => "@b:hs1" => vec![1],
-			StateEventType::RoomMember => "@c:hs1" => vec![2],
-		],);
+		assert_eq!(
+			conflicted,
+			state_set![
+				StateEventType::RoomMember => "@a:hs1" => vec![0],
+				StateEventType::RoomMember => "@b:hs1" => vec![1],
+				StateEventType::RoomMember => "@c:hs1" => vec![2],
+			],
+		);
 	}
 
 	#[test]
@@ -2008,9 +2015,12 @@ mod tests {
 		}
 
 		assert_eq!(unconflicted, StateMap::new());
-		assert_eq!(conflicted, state_set![
-			StateEventType::RoomMember => "@a:hs1" => vec![0, 1, 2],
-		],);
+		assert_eq!(
+			conflicted,
+			state_set![
+				StateEventType::RoomMember => "@a:hs1" => vec![0, 1, 2],
+			],
+		);
 	}
 
 	#[test]
@@ -2024,9 +2034,12 @@ mod tests {
 			.iter(),
 		);
 
-		assert_eq!(unconflicted, state_set![
-			StateEventType::RoomMember => "@a:hs1" => 0,
-		],);
+		assert_eq!(
+			unconflicted,
+			state_set![
+				StateEventType::RoomMember => "@a:hs1" => 0,
+			],
+		);
 		assert_eq!(conflicted, StateMap::new());
 	}
 
@@ -2047,12 +2060,18 @@ mod tests {
 			.iter(),
 		);
 
-		assert_eq!(unconflicted, state_set![
-			StateEventType::RoomMember => "@a:hs1" => 0,
-		],);
-		assert_eq!(conflicted, state_set![
-			StateEventType::RoomMember => "@b:hs1" => vec![1],
-			StateEventType::RoomMember => "@c:hs1" => vec![2],
-		],);
+		assert_eq!(
+			unconflicted,
+			state_set![
+				StateEventType::RoomMember => "@a:hs1" => 0,
+			],
+		);
+		assert_eq!(
+			conflicted,
+			state_set![
+				StateEventType::RoomMember => "@b:hs1" => vec![1],
+				StateEventType::RoomMember => "@c:hs1" => vec![2],
+			],
+		);
 	}
 }

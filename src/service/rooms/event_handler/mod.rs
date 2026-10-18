@@ -113,9 +113,13 @@ impl crate::Service for Service {
 		Ok(())
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 
-	fn interrupt(&self) { self.server_shutdown.notify_waiters(); }
+	fn interrupt(&self) {
+		self.server_shutdown.notify_waiters();
+	}
 
 	async fn clear_cache(&self) {
 		let mut failed_pdu_pulls = self.failed_pdu_pulls.write();

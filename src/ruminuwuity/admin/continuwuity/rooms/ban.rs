@@ -36,7 +36,9 @@ pub mod v1 {
 
 	impl Request {
 		#[must_use]
-		pub fn new(room_id: OwnedRoomId, banned: bool) -> Self { Self { room_id, banned } }
+		pub fn new(room_id: OwnedRoomId, banned: bool) -> Self {
+			Self { room_id, banned }
+		}
 	}
 
 	impl Response {

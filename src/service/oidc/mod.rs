@@ -210,7 +210,9 @@ impl crate::Service for Service {
 		Ok(())
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -221,7 +223,9 @@ impl Service {
 	const SERVER_MISCONFIGURED: &str =
 		"Identity server is misconfigured. Contact your homeserver's administrator.";
 
-	pub fn enabled(&self) -> bool { self.client.is_some() }
+	pub fn enabled(&self) -> bool {
+		self.client.is_some()
+	}
 
 	pub fn provider_name(&self) -> Option<String> {
 		let OidcClient { config, .. } = self.client.as_ref().expect("oidc should be configured");
@@ -546,7 +550,9 @@ impl Service {
 			.insert(subject, user_id.localpart());
 	}
 
-	pub fn unlink_user(&self, subject: &str) { self.db.openidsubject_localpart.remove(subject); }
+	pub fn unlink_user(&self, subject: &str) {
+		self.db.openidsubject_localpart.remove(subject);
+	}
 
 	/// Determine what user ID a localpart claim refers to.
 	pub async fn identify_claimed_local_user(&self, claim: &str) -> Result<ClaimedLocalUser> {

@@ -35,7 +35,9 @@ pub mod unstable {
 	impl Response {
 		/// Creates a new `Response` with the given recommendation.
 		#[must_use]
-		pub fn new(recommendation: String) -> Self { Self { recommendation } }
+		pub fn new(recommendation: String) -> Self {
+			Self { recommendation }
+		}
 	}
 
 	/// Request type for the `check` endpoint.
@@ -54,6 +56,8 @@ pub mod unstable {
 	impl Request {
 		/// Creates a new `Request` with the given event ID.
 		#[must_use]
-		pub fn new(event_id: OwnedEventId) -> Self { Self { event_id, pdu: None } }
+		pub fn new(event_id: OwnedEventId) -> Self {
+			Self { event_id, pdu: None }
+		}
 	}
 }

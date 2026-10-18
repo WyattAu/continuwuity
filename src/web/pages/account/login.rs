@@ -93,10 +93,16 @@ async fn route_login(
 			.await;
 
 		session_store
-			.insert(OIDC_SESSION_ID_KEY, OidcSession {
-				next: next.clone().unwrap_or_default(),
-				state: OidcSessionState::CodeExchange { expected_user: user_id.clone(), session },
-			})
+			.insert(
+				OIDC_SESSION_ID_KEY,
+				OidcSession {
+					next: next.clone().unwrap_or_default(),
+					state: OidcSessionState::CodeExchange {
+						expected_user: user_id.clone(),
+						session,
+					},
+				},
+			)
 			.await
 			.expect("should be able to serialize OIDC session");
 

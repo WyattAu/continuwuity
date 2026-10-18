@@ -81,7 +81,9 @@ impl crate::Service for Service {
 		Ok(())
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -423,7 +425,9 @@ impl Service {
 
 	#[inline]
 	#[must_use]
-	pub fn get_media_file(&self, key: &[u8]) -> PathBuf { self.get_media_file_sha256(key) }
+	pub fn get_media_file(&self, key: &[u8]) -> PathBuf {
+		self.get_media_file_sha256(key)
+	}
 
 	/// new SHA256 file name media function. requires database migrated. uses
 	/// SHA256 hash of the base64 key as the file name
@@ -461,4 +465,6 @@ impl Service {
 
 #[inline]
 #[must_use]
-pub fn encode_key(key: &[u8]) -> String { general_purpose::URL_SAFE_NO_PAD.encode(key) }
+pub fn encode_key(key: &[u8]) -> String {
+	general_purpose::URL_SAFE_NO_PAD.encode(key)
+}

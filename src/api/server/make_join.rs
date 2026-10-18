@@ -132,8 +132,7 @@ pub(crate) async fn create_join_event_template_route(
 		if services
 			.antispam
 			.meowlnir_accept_make_join(body.room_id.clone(), body.user_id.clone())
-			.await
-			!= JoinConditionResult::Satisfied
+			.await != JoinConditionResult::Satisfied
 		{
 			return Err!(Request(Forbidden("Antispam rejected join request.")));
 		}

@@ -35,11 +35,14 @@ pub(crate) async fn create_invite_route(
 ) -> Result<create_invite::v2::Response> {
 	let result = create_invite(&services, body).await;
 
-	services.server.metrics.instruments.invites.add(1, &[
-		KeyValue::new("direction", "incoming"),
-		KeyValue::new("destination", "local"),
-		KeyValue::new("outcome", if result.is_ok() { "success" } else { "failure" }),
-	]);
+	services.server.metrics.instruments.invites.add(
+		1,
+		&[
+			KeyValue::new("direction", "incoming"),
+			KeyValue::new("destination", "local"),
+			KeyValue::new("outcome", if result.is_ok() { "success" } else { "failure" }),
+		],
+	);
 
 	result
 }
@@ -363,11 +366,12 @@ async fn validate_invite_state(
 
 		let key = StateEventType::from(event_type).with_state_key(state_key);
 		match invite_state_map.entry(key) {
-			| Entry::Occupied(entry) =>
+			| Entry::Occupied(entry) => {
 				return Err!(Request(InvalidParam(
 					"Duplicate state events in invite state for state key: {:?}",
 					entry.key(),
-				))),
+				)));
+			},
 			| Entry::Vacant(entry) => {
 				if entry.key().0 == StateEventType::RoomCreate {
 					// Ensure this is a legal create event.

@@ -388,8 +388,9 @@ impl crate::Context<'_> {
 		let body = rooms
 			.iter()
 			.map(|((id, members, name), sender)| match sender {
-				| Ok(user_id) =>
-					format!("{id}\tInviter: {user_id}\tMembers: {members}\tName: {name}"),
+				| Ok(user_id) => {
+					format!("{id}\tInviter: {user_id}\tMembers: {members}\tName: {name}")
+				},
 				| Err(_) => format!("{id}\tMembers: {members}\tName: {name}"),
 			})
 			.collect::<Vec<_>>()
@@ -1072,12 +1073,14 @@ impl crate::Context<'_> {
 			.get_email_for_localpart(user_id.localpart())
 			.await
 		{
-			| Some(email) =>
+			| Some(email) => {
 				self.write_str(&format!("{user_id} has the associated email address {email}."))
-					.await,
-			| None =>
+					.await
+			},
+			| None => {
 				self.write_str(&format!("{user_id} has no associated email address."))
-					.await,
+					.await
+			},
 		}
 	}
 
@@ -1097,9 +1100,10 @@ impl crate::Context<'_> {
 				self.write_str(&format!("{email} belongs to {user_id}."))
 					.await
 			},
-			| None =>
+			| None => {
 				self.write_str(&format!("No user has {email} as their email address."))
-					.await,
+					.await
+			},
 		}
 	}
 
@@ -1123,11 +1127,12 @@ impl crate::Context<'_> {
 			.await;
 
 		match (current_email, new_email) {
-			| (None, None) =>
+			| (None, None) => {
 				self.write_str(&format!(
 					"{user_id} already had no associated email. No changes have been made."
 				))
-				.await,
+				.await
+			},
 			| (current_email, Some(new_email)) => {
 				self.services
 					.threepid

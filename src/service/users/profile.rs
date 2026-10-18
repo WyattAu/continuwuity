@@ -81,8 +81,7 @@ impl super::Service {
 			if let Ok(canonical_profile) = to_canonical_object(full_profile) {
 				if serde_json::to_string(&canonical_profile)
 					.expect("should be able to serialize to string")
-					.len()
-					> MAX_PROFILE_LENGTH_BYTES
+					.len() > MAX_PROFILE_LENGTH_BYTES
 				{
 					return Err!(
 						"Profile data must not exceed {MAX_PROFILE_LENGTH_BYTES} bytes in \
@@ -126,7 +125,9 @@ impl super::Service {
 				{
 					| Ok(current_membership)
 						if current_membership.membership == MembershipState::Join =>
-						current_membership,
+					{
+						current_membership
+					},
 					| Ok(current_membership) => {
 						warn!(
 							?user_id,
@@ -150,11 +151,13 @@ impl super::Service {
 				// value in this room, skip it.
 				if matches!(propagate_to, PropagateTo::Unchanged) {
 					let field_changed_from_global = match field_name {
-						| ProfileFieldName::AvatarUrl =>
-							current_membership.avatar_url.as_ref() != current_avatar_url.as_ref(),
-						| ProfileFieldName::DisplayName =>
+						| ProfileFieldName::AvatarUrl => {
+							current_membership.avatar_url.as_ref() != current_avatar_url.as_ref()
+						},
+						| ProfileFieldName::DisplayName => {
 							current_membership.displayname.as_ref()
-								!= current_displayname.as_ref(),
+								!= current_displayname.as_ref()
+						},
 						| _ => unreachable!(),
 					};
 

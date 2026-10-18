@@ -94,14 +94,15 @@ pub(crate) async fn create_room_route(
 	}
 
 	let room_version = match body.room_version.clone() {
-		| Some(room_version) =>
+		| Some(room_version) => {
 			if services.server.supported_room_version(&room_version) {
 				room_version
 			} else {
 				return Err!(Request(UnsupportedRoomVersion(
 					"This server does not support that room version."
 				)));
-			},
+			}
+		},
 		| None => services.server.config.default_room_version.clone(),
 	};
 	let room_version_rules = room_version.rules().unwrap();
@@ -208,8 +209,9 @@ pub(crate) async fn create_room_route(
 	}
 
 	let alias: Option<OwnedRoomAliasId> = match body.room_alias_name.as_ref() {
-		| Some(alias) =>
-			Some(room_alias_check(&services, alias, body.identity.appservice_info()).await?),
+		| Some(alias) => {
+			Some(room_alias_check(&services, alias, body.identity.appservice_info()).await?)
+		},
 		| _ => None,
 	};
 

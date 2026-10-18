@@ -82,27 +82,34 @@ impl super::Service {
 					"You cannot update m.room.create after a room has been created."
 				))));
 			},
-			| StateEventType::RoomServerAcl =>
-				self.assert_allowed_to_send_room_server_acl_event(room_id, json)?,
+			| StateEventType::RoomServerAcl => {
+				self.assert_allowed_to_send_room_server_acl_event(room_id, json)?
+			},
 			| StateEventType::RoomEncryption =>
 			// Forbid m.room.encryption if encryption is disabled
+			{
 				if !self.services.config.allow_encryption {
 					return Err!(Request(Forbidden(
 						"Encryption is disabled on this homeserver."
 					)));
-				},
-			| StateEventType::RoomJoinRules =>
+				}
+			},
+			| StateEventType::RoomJoinRules => {
 				self.assert_allowed_to_send_room_join_rules_event(room_id, json)
-					.await?,
-			| StateEventType::RoomHistoryVisibility =>
+					.await?
+			},
+			| StateEventType::RoomHistoryVisibility => {
 				self.assert_allowed_to_send_room_history_visibility_event(room_id, json)
-					.await?,
-			| StateEventType::RoomCanonicalAlias =>
+					.await?
+			},
+			| StateEventType::RoomCanonicalAlias => {
 				self.assert_allowed_to_send_room_canonical_alias_event(room_id, json)
-					.await?,
-			| StateEventType::RoomMember =>
+					.await?
+			},
+			| StateEventType::RoomMember => {
 				self.assert_allowed_to_send_room_member_event(room_id, state_key, json)
-					.await?,
+					.await?
+			},
 			| _ => (),
 		}
 

@@ -97,7 +97,9 @@ impl Drop for Manager {
 impl Deref for Manager {
 	type Target = Arc<Config>;
 
-	fn deref(&self) -> &Self::Target { HANDLE.with_borrow_mut(|handle| self.load(handle)) }
+	fn deref(&self) -> &Self::Target {
+		HANDLE.with_borrow_mut(|handle| self.load(handle))
+	}
 }
 
 #[tracing::instrument(

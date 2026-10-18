@@ -2,7 +2,7 @@ use axum::{Json, extract::State, response::IntoResponse};
 use conduwuit::{
 	Err, Result,
 	matrix::versions::{unstable_features, versions},
-	metrics::PROMETHEUS_CONTENT_TYPE,
+	metrics::{Format, PROMETHEUS_CONTENT_TYPE},
 	utils::string::constant_time_eq,
 };
 use futures::StreamExt;
@@ -104,4 +104,34 @@ pub(crate) async fn continuwuity_metrics(
 	let body = services.server.metrics.render()?;
 
 	Ok(([(header::CONTENT_TYPE, PROMETHEUS_CONTENT_TYPE)], body))
+}
+
+/// # `GET /_continuwuity/metrics/openmetrics`
+///
+/// OpenMetrics text exposition from the metrics-kit registry. Carries the
+/// single-series gauges; labelled series remain on the Prometheus endpoint.
+/// Same enablement (`allow_prometheus_metrics`) and bearer-token gate as
+/// the Prometheus endpoint.
+pub(crate) async fn continuwuity_metrics_openmetrics(
+	State(services): State<crate::State>,
+	headers: HeaderMap,
+) -> Result<impl IntoResponse> {
+	if let Some(token) = &services.config.prometheus_metrics_token {
+		let authorized = headers
+			.get(header::AUTHORIZATION)
+			.and_then(|value| value.to_str().ok())
+			.and_then(|value| value.split_once(' '))
+			.is_some_and(|(scheme, provided)| {
+				scheme.eq_ignore_ascii_case("bearer") && constant_time_eq(provided, token)
+			});
+
+		if !authorized {
+			return Err!(Request(Unauthorized("Invalid metrics token")));
+		}
+	}
+
+	let content_type = Format::OpenMetrics.content_type();
+	let body = services.server.metrics.render_openmetrics()?;
+
+	Ok(([(header::CONTENT_TYPE, content_type)], body))
 }

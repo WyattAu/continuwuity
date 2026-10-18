@@ -18,18 +18,28 @@ static USER_AGENT: OnceLock<String> = OnceLock::new();
 static USER_AGENT_MEDIA: OnceLock<String> = OnceLock::new();
 
 #[inline]
-pub fn version() -> &'static str { VERSION.get_or_init(init_version) }
+pub fn version() -> &'static str {
+	VERSION.get_or_init(init_version)
+}
 
 #[inline]
-pub fn version_ua() -> &'static str { VERSION_UA.get_or_init(init_version_ua) }
+pub fn version_ua() -> &'static str {
+	VERSION_UA.get_or_init(init_version_ua)
+}
 
 #[inline]
-pub fn user_agent() -> &'static str { USER_AGENT.get_or_init(init_user_agent) }
+pub fn user_agent() -> &'static str {
+	USER_AGENT.get_or_init(init_user_agent)
+}
 
 #[inline]
-pub fn user_agent_media() -> &'static str { USER_AGENT_MEDIA.get_or_init(init_user_agent_media) }
+pub fn user_agent_media() -> &'static str {
+	USER_AGENT_MEDIA.get_or_init(init_user_agent_media)
+}
 
-fn init_user_agent() -> String { format!("{BRANDING}/{} (bot; +{WEBSITE})", version_ua()) }
+fn init_user_agent() -> String {
+	format!("{BRANDING}/{} (bot; +{WEBSITE})", version_ua())
+}
 
 fn init_user_agent_media() -> String {
 	format!("{BRANDING}/{} (embedbot; facebookexternalhit/1.1; +{WEBSITE})", version_ua())

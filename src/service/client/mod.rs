@@ -171,7 +171,9 @@ impl crate::Service for Service {
 		self.dns_resolver.clear_cache();
 	}
 
-	fn name(&self) -> &str { service::make_name(module_path!()) }
+	fn name(&self) -> &str {
+		service::make_name(module_path!())
+	}
 }
 
 impl Service {

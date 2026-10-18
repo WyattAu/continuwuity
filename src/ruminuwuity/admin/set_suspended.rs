@@ -44,12 +44,16 @@ pub mod v1 {
 	impl Request {
 		/// Creates a new `Request` with the given user id.
 		#[must_use]
-		pub fn new(user_id: OwnedUserId, suspended: bool) -> Self { Self { user_id, suspended } }
+		pub fn new(user_id: OwnedUserId, suspended: bool) -> Self {
+			Self { user_id, suspended }
+		}
 	}
 
 	impl Response {
 		/// Creates a new `Response` with the given suspension status.
 		#[must_use]
-		pub fn new(suspended: bool) -> Self { Self { suspended } }
+		pub fn new(suspended: bool) -> Self {
+			Self { suspended }
+		}
 	}
 }

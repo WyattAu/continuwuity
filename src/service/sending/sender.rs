@@ -167,8 +167,9 @@ impl Service {
 		statuses.entry(dest).and_modify(|e| {
 			*e = match e {
 				| TransactionStatus::Running => TransactionStatus::Failed(1, Instant::now()),
-				| &mut TransactionStatus::Retrying(ref n) =>
-					TransactionStatus::Failed(n.saturating_add(1), Instant::now()),
+				| &mut TransactionStatus::Retrying(ref n) => {
+					TransactionStatus::Failed(n.saturating_add(1), Instant::now())
+				},
 				| TransactionStatus::Failed(..) => {
 					panic!(
 						"Request to {dest2:?} that was not even running ({e:?}) failed: {er:?}"
@@ -770,11 +771,13 @@ impl Service {
 
 		let start = Instant::now();
 		let send = match dest {
-			| Destination::Federation(server) =>
-				self.send_events_dest_federation(server, events).boxed(),
+			| Destination::Federation(server) => {
+				self.send_events_dest_federation(server, events).boxed()
+			},
 			| Destination::Appservice(id) => self.send_events_dest_appservice(id, events).boxed(),
-			| Destination::Push(user_id, pushkey) =>
-				self.send_events_dest_push(user_id, pushkey, events).boxed(),
+			| Destination::Push(user_id, pushkey) => {
+				self.send_events_dest_push(user_id, pushkey, events).boxed()
+			},
 		};
 
 		send.inspect(move |result| {
@@ -786,11 +789,10 @@ impl Service {
 				.record(start.elapsed().as_secs_f64(), &[destination.clone(), outcome.clone()]);
 			for (kind, count) in [("pdu", pdus), ("edu", edus)] {
 				if count > 0 {
-					instruments.sender_events.add(count, &[
-						destination.clone(),
-						KeyValue::new("kind", kind),
-						outcome.clone(),
-					]);
+					instruments.sender_events.add(
+						count,
+						&[destination.clone(), KeyValue::new("kind", kind), outcome.clone()],
+					);
 				}
 			}
 		})
@@ -836,12 +838,13 @@ impl Service {
 						pdu_jsons.push(pdu.to_format());
 					}
 				},
-				| SendingEvent::Edu(edu) =>
+				| SendingEvent::Edu(edu) => {
 					if appservice.receive_ephemeral {
 						if let Ok(edu) = serde_json::from_slice::<Raw<EphemeralData>>(edu) {
 							edu_jsons.push(edu);
 						}
-					},
+					}
+				},
 				| SendingEvent::Flush => {}, // flush only; no new content
 			}
 		}

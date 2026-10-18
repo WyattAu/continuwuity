@@ -96,7 +96,9 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -692,10 +694,13 @@ impl Service {
 			match response {
 				| Accessibility::Accessible((server, response)) => {
 					// The via has the room.
-					return Accessibility::Accessible((server, RoomStrippedState {
-						state: response.state,
-						num_joined_members: response.num_joined_members,
-					}));
+					return Accessibility::Accessible((
+						server,
+						RoomStrippedState {
+							state: response.state,
+							num_joined_members: response.num_joined_members,
+						},
+					));
 				},
 				| Accessibility::Inaccessible => {
 					// The via has the room and was able to determine that we
@@ -767,8 +772,8 @@ impl Service {
 				self.services
 					.membership
 					.evaluate_join_conditions(room_id, querying_user.into(), &conditions)
-					.await
-					== JoinConditionResult::Satisfied,
+					.await == JoinConditionResult::Satisfied
+			},
 
 			// In all other cases, the user may not view the summary.
 			| _ => false,
@@ -814,8 +819,7 @@ impl Service {
 				.services
 				.membership
 				.evaluate_join_conditions(room_id, querying_server.into(), &conditions)
-				.await
-				== JoinConditionResult::Satisfied;
+				.await == JoinConditionResult::Satisfied;
 		}
 
 		// If the server isn't in the room, the same visibility rules apply as

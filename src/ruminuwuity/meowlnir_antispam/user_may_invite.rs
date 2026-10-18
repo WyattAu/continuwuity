@@ -59,6 +59,8 @@ pub mod v1 {
 	impl Response {
 		/// Creates a new empty `Response`.
 		#[must_use]
-		pub fn new() -> Self { Self::default() }
+		pub fn new() -> Self {
+			Self::default()
+		}
 	}
 }

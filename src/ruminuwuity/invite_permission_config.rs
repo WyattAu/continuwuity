@@ -175,9 +175,13 @@ mod tests {
 
 	use crate::invite_permission_config::{FilterLevel, InvitePermissionConfigEventContent};
 
-	fn user_id(id: &str) -> &UserId { <&UserId>::try_from(id).unwrap() }
+	fn user_id(id: &str) -> &UserId {
+		<&UserId>::try_from(id).unwrap()
+	}
 
-	fn server_name(name: &str) -> &ServerName { <&ServerName>::try_from(name).unwrap() }
+	fn server_name(name: &str) -> &ServerName {
+		<&ServerName>::try_from(name).unwrap()
+	}
 
 	#[test]
 	fn default_values() {

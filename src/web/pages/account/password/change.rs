@@ -78,8 +78,9 @@ async fn route_change_password(
 	let body = if let Some(form) = form {
 		match change_password(&services, &user_id, form).await? {
 			| Ok(()) => ChangePasswordBody::Success,
-			| Err(errors) =>
-				ChangePasswordBody::Form(ChangePasswordForm::with_errors(context.clone(), errors)),
+			| Err(errors) => {
+				ChangePasswordBody::Form(ChangePasswordForm::with_errors(context.clone(), errors))
+			},
 		}
 	} else {
 		ChangePasswordBody::Form(ChangePasswordForm::build(context.clone()))

@@ -42,13 +42,19 @@ pub enum EmailRequirement {
 
 impl EmailRequirement {
 	#[must_use]
-	pub fn may_change(&self) -> bool { matches!(self, Self::Required | Self::Optional) }
+	pub fn may_change(&self) -> bool {
+		matches!(self, Self::Required | Self::Optional)
+	}
 
 	#[must_use]
-	pub fn may_remove(&self) -> bool { matches!(self, Self::Optional) }
+	pub fn may_remove(&self) -> bool {
+		matches!(self, Self::Optional)
+	}
 
 	#[must_use]
-	pub fn may_view(&self) -> bool { !matches!(self, Self::Unavailable) }
+	pub fn may_view(&self) -> bool {
+		!matches!(self, Self::Unavailable)
+	}
 }
 
 struct Data {
@@ -78,7 +84,9 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {

@@ -52,7 +52,9 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -146,7 +148,9 @@ fn into_status(result: Result<Handle<'_>>) -> Status {
 }
 
 impl Options for LazyLoadOptions {
-	fn is_enabled(&self) -> bool { !self.is_disabled() }
+	fn is_enabled(&self) -> bool {
+		!self.is_disabled()
+	}
 
 	fn include_redundant_members(&self) -> bool {
 		if let Self::Enabled { include_redundant_members } = self {

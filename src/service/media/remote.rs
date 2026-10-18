@@ -97,10 +97,12 @@ impl super::Service {
 		let Response { content, .. } = self.federation_request(mxc, server, request).await?;
 
 		match content {
-			| FileOrLocation::File(content) =>
-				self.handle_thumbnail_file(mxc, user, dim, content).await,
-			| FileOrLocation::Location(location) =>
-				self.handle_location(mxc, user, &location).await,
+			| FileOrLocation::File(content) => {
+				self.handle_thumbnail_file(mxc, user, dim, content).await
+			},
+			| FileOrLocation::Location(location) => {
+				self.handle_location(mxc, user, &location).await
+			},
 			| _ => Err!("Unknown content in response"),
 		}
 	}
@@ -121,8 +123,9 @@ impl super::Service {
 
 		match content {
 			| FileOrLocation::File(content) => self.handle_content_file(mxc, user, content).await,
-			| FileOrLocation::Location(location) =>
-				self.handle_location(mxc, user, &location).await,
+			| FileOrLocation::Location(location) => {
+				self.handle_location(mxc, user, &location).await
+			},
 			| _ => Err!("Unknown content in response"),
 		}
 	}

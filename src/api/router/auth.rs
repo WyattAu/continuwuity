@@ -46,15 +46,17 @@ pub(crate) enum ClientIdentity {
 impl ClientIdentity {
 	pub(crate) fn sender_user(&self) -> Option<&UserId> {
 		match self {
-			| Self::User { sender_user, .. } | Self::Appservice { sender_user, .. } =>
-				Some(sender_user),
+			| Self::User { sender_user, .. } | Self::Appservice { sender_user, .. } => {
+				Some(sender_user)
+			},
 		}
 	}
 
 	pub(crate) fn expect_sender_user(&self) -> Result<&UserId> {
 		match self {
-			| Self::User { sender_user, .. } | Self::Appservice { sender_user, .. } =>
-				Ok(sender_user),
+			| Self::User { sender_user, .. } | Self::Appservice { sender_user, .. } => {
+				Ok(sender_user)
+			},
 		}
 	}
 
@@ -69,8 +71,9 @@ impl ClientIdentity {
 		match self {
 			| Self::User { sender_device, .. }
 			| Self::Appservice { sender_device: Some(sender_device), .. } => Ok(sender_device),
-			| Self::Appservice { sender_device: None, .. } =>
-				Err!(Request(Forbidden("Appservices must masquerade to use this endpoint."))),
+			| Self::Appservice { sender_device: None, .. } => {
+				Err!(Request(Forbidden("Appservices must masquerade to use this endpoint.")))
+			},
 		}
 	}
 
@@ -81,7 +84,9 @@ impl ClientIdentity {
 		}
 	}
 
-	pub(crate) fn is_appservice(&self) -> bool { matches!(self, Self::Appservice { .. }) }
+	pub(crate) fn is_appservice(&self) -> bool {
+		matches!(self, Self::Appservice { .. })
+	}
 }
 
 pub(crate) trait CheckAuth: AuthScheme {
@@ -261,9 +266,13 @@ impl CheckAuth for NoAccessToken {
 			})?;
 
 		if let Some(authentication) = authentication {
-			check_access_token(services, &authentication, query, TypeId::of::<R>(), &[
-				OAuthClientScope::ApiFullAccess,
-			])
+			check_access_token(
+				services,
+				&authentication,
+				query,
+				TypeId::of::<R>(),
+				&[OAuthClientScope::ApiFullAccess],
+			)
 			.await
 			.map(Some)
 		} else {

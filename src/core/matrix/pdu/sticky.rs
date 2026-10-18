@@ -73,9 +73,13 @@ mod tests {
 
 	use super::{MAX_DURATION_MS, duration_ms, expires_at, is_sticky, object};
 
-	fn raw(json: &serde_json::Value) -> Box<RawJsonValue> { to_raw_value(json).unwrap() }
+	fn raw(json: &serde_json::Value) -> Box<RawJsonValue> {
+		to_raw_value(json).unwrap()
+	}
 
-	fn ts(millis: u64) -> UInt { UInt::try_from(millis).unwrap() }
+	fn ts(millis: u64) -> UInt {
+		UInt::try_from(millis).unwrap()
+	}
 
 	#[test]
 	fn duration_of_valid_object() {

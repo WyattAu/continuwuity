@@ -123,11 +123,14 @@ pub(crate) async fn invite_helper(
 	} else {
 		"remote"
 	};
-	services.server.metrics.instruments.invites.add(1, &[
-		KeyValue::new("direction", "outgoing"),
-		KeyValue::new("destination", destination),
-		KeyValue::new("outcome", if result.is_ok() { "success" } else { "failure" }),
-	]);
+	services.server.metrics.instruments.invites.add(
+		1,
+		&[
+			KeyValue::new("direction", "outgoing"),
+			KeyValue::new("destination", destination),
+			KeyValue::new("outcome", if result.is_ok() { "success" } else { "failure" }),
+		],
+	);
 
 	result
 }

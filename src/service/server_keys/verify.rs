@@ -100,9 +100,11 @@ impl super::Service {
 			)));
 		};
 		let mut canonical_object = to_canonical_object(notary_signatures)?;
-		Self::strip_extraneous_signatures(&mut canonical_object, &server_keys.server_name, &[
-			notary_name,
-		]);
+		Self::strip_extraneous_signatures(
+			&mut canonical_object,
+			&server_keys.server_name,
+			&[notary_name],
+		);
 		let for_verify = ruma::signatures::to_canonical_json_string_for_signing(
 			&to_canonical_object(server_keys).expect("server keys object must be canonical json"),
 		)

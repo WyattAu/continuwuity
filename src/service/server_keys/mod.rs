@@ -64,12 +64,16 @@ impl crate::Service for Service {
 		}))
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
 	/// Fetches the server's active keypair.
-	pub fn keypair(&self) -> &Ed25519KeyPair { &self.keypair }
+	pub fn keypair(&self) -> &Ed25519KeyPair {
+		&self.keypair
+	}
 
 	/// Fetches the server's active signing key. Panics if there's more than 1
 	/// active key.

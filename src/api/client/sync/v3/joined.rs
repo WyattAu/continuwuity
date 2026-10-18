@@ -589,6 +589,7 @@ async fn build_state_events(
 		*/
 		| (Some(_), Some(last_sync_end_shortstatehash))
 			if !full_state && !joined_since_last_sync =>
+		{
 			build_state_incremental(
 				services,
 				syncing_user,
@@ -599,13 +600,14 @@ async fn build_state_events(
 				lazily_loaded_members.as_ref(),
 			)
 			.boxed()
-			.await,
+			.await
+		},
 		/*
 		otherwise use `build_state_initial`. note that this branch will be taken if the user joined this room since the last sync
 		for the first time ever, because in that case we have no `last_sync_end_shortstatehash` and can't correctly calculate
 		the state using the incremental sync algorithm.
 		*/
-		| _ =>
+		| _ => {
 			build_state_initial(
 				services,
 				syncing_user,
@@ -615,7 +617,8 @@ async fn build_state_events(
 				lazily_loaded_members.as_ref(),
 			)
 			.boxed()
-			.await,
+			.await
+		},
 	}
 }
 

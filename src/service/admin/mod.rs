@@ -85,7 +85,9 @@ impl InvocationSource {
 	/// commands, i.e. ones that could be potentially dangerous if executed by
 	/// an attacker or in a public room.
 	#[must_use]
-	pub fn allows_restricted(&self) -> bool { !matches!(self, Self::EscapedCommand) }
+	pub fn allows_restricted(&self) -> bool {
+		!matches!(self, Self::EscapedCommand)
+	}
 }
 
 /// Prototype of the tab-completer. The input is buffered text when tab
@@ -171,7 +173,9 @@ impl crate::Service for Service {
 		}
 	}
 
-	fn name(&self) -> &str { crate::service::make_name(std::module_path!()) }
+	fn name(&self) -> &str {
+		crate::service::make_name(std::module_path!())
+	}
 }
 
 impl Service {
@@ -228,18 +232,20 @@ impl Service {
 			.body()
 			.len()
 			.saturating_add(match &content.msgtype {
-				| MessageType::Text(t) =>
+				| MessageType::Text(t) => {
 					if t.formatted.is_some() {
 						t.formatted.as_ref().map_or(0, |f| f.body.len())
 					} else {
 						0
-					},
-				| MessageType::Notice(n) =>
+					}
+				},
+				| MessageType::Notice(n) => {
 					if n.formatted.is_some() {
 						n.formatted.as_ref().map_or(0, |f| f.body.len())
 					} else {
 						0
-					},
+					}
+				},
 				| _ => 0,
 			})
 			.try_into()
@@ -652,10 +658,12 @@ impl Service {
 
 		// Add configured contact if at least one contact method is specified
 		let configured_contact = match (matrix_id, email_address) {
-			| (Some(matrix_id), email_address) =>
-				Some(assign!(Contact::with_matrix_id(role, matrix_id), { email_address })),
-			| (None, Some(email_address)) =>
-				Some(Contact::with_email_address(role, email_address)),
+			| (Some(matrix_id), email_address) => {
+				Some(assign!(Contact::with_matrix_id(role, matrix_id), { email_address }))
+			},
+			| (None, Some(email_address)) => {
+				Some(Contact::with_email_address(role, email_address))
+			},
 			| (None, None) => None,
 		};
 
