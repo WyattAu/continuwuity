@@ -38,10 +38,12 @@ series):
   same `allow_prometheus_metrics` config and bearer token as the
   Prometheus endpoint.
 
-Known scope limits, recorded rather than hidden: the kit registry
-carries single-series gauges only (labelled series such as
-`continuwuity.users{origin}` remain on the Prometheus endpoint), and
-the gauge callback runs twice per collection.
+Labelled series (cycle 8 fork v2): gauges with FIXED labelsets
+(`continuwuity.users{origin}` local/remote) pre-register their series
+and mirror inside the closure; DYNAMIC-label gauges (per-server
+destinations) stay on the Prometheus endpoint, since unbounded label
+registration is what the cardinality budget exists to refuse. The
+gauge callback runs twice per collection for mirrored gauges.
 
 ## Phases
 

@@ -48,16 +48,37 @@ impl Services {
 			},
 		);
 
+		// Labelled kit mirror: two fixed origin series. The generic
+		// helper's kit path carries single-series gauges only, so this
+		// labelled gauge sets its kit mirrors inside the closure.
+		let kit_local = self.server.metrics.kit_gauge_labeled(
+			"continuwuity.users",
+			"Estimated known users, local including deactivated",
+			&[("origin", "local")],
+		);
+		let kit_remote = self.server.metrics.kit_gauge_labeled(
+			"continuwuity.users",
+			"Estimated known users, local including deactivated",
+			&[("origin", "remote")],
+		);
 		self.gauge(
 			"continuwuity.users",
 			"Estimated known users, local including deactivated",
 			"{user}",
-			|services, observer| {
+			move |services, observer| {
 				for (map, origin) in
 					[("userid_password", "local"), ("remoteuserid_remoteuser", "remote")]
 				{
 					if let Some(keys) = estimate_keys(services, map) {
 						observer.observe(keys, &[KeyValue::new("origin", origin)]);
+						let mirror = match origin {
+							| "local" => &kit_local,
+							| _ => &kit_remote,
+						};
+						if let Some(kit) = mirror {
+							#[allow(clippy::as_conversions, clippy::cast_precision_loss)]
+							kit.set(keys as f64);
+						}
 					}
 				}
 			},

@@ -112,6 +112,17 @@ impl Metrics {
 		self.kit_registry.gauge(name, help, &[]).ok()
 	}
 
+	/// Register a gauge with explicit labels on the metrics-kit registry.
+	/// Same refusal semantics as [`Self::kit_gauge`].
+	pub fn kit_gauge_labeled(
+		&self,
+		name: &'static str,
+		help: &'static str,
+		labels: &[(&str, &str)],
+	) -> Option<KitGauge> {
+		self.kit_registry.gauge(name, help, labels).ok()
+	}
+
 	/// OpenMetrics text exposition from the metrics-kit registry. Carries
 	/// the single-series gauges only; labelled series remain on the
 	/// Prometheus endpoint.
