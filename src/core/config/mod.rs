@@ -1048,6 +1048,18 @@ pub struct Config {
 	#[serde(default)]
 	pub allow_prometheus_metrics: bool,
 
+	/// Optional URL for signed admin-webhook notifications (currently: new
+	/// local registrations). Empty disables the emitter. Payloads are
+	/// signed in the Stripe `t=`/`v1=` header convention via
+	/// [webhookkit](https://github.com/WyattAu/webhookkit), so receivers
+	/// verify with that crate's verifiers.
+	#[serde(default)]
+	pub admin_webhook_url: Option<String>,
+	/// HMAC secret for `admin_webhook_url`. Required when the URL is set;
+	/// ignored otherwise.
+	#[serde(default)]
+	pub admin_webhook_secret: Option<String>,
+
 	/// Bearer token required to scrape the Prometheus metrics endpoint. When
 	/// set, requests must include an `Authorization: Bearer <token>` header.
 	///

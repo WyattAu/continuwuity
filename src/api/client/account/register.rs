@@ -107,6 +107,12 @@ pub(crate) async fn register_route(
 		user_id
 	};
 
+	// Fire-and-forget signed admin webhook (WyattAu fork, cycle 8
+	// iteration 4): registration must not depend on the notification
+	// path, so delivery errors are logged inside the spawned task and
+	// dropped.
+	crate::client::spawn_admin_webhook(&services, "user.registered", user_id.as_str());
+
 	let (token, device) = if !body.inhibit_login {
 		// If UIAA is disabled, we can't create a device. In that case only
 		// appservices can reach this point in the first place, so we return

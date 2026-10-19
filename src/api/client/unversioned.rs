@@ -135,3 +135,54 @@ pub(crate) async fn continuwuity_metrics_openmetrics(
 
 	Ok(([(header::CONTENT_TYPE, content_type)], body))
 }
+
+/// Fire-and-forget signed admin webhook (`admin_webhook_url` +
+/// `admin_webhook_secret`, cycle 8 iteration 4). The payload is signed in
+/// the Stripe `t=`/`v1=` header convention via
+/// [webhookkit](https://github.com/WyattAu/webhookkit), so receivers
+/// verify with `webhookkit::verify_stripe_webhook` and no new receiver
+/// code. Delivery runs on a spawned task: failures log and are dropped,
+/// because registration must not depend on the notification path.
+pub(crate) fn spawn_admin_webhook(services: &crate::State, event: &'static str, user_id: &str) {
+	let Some(url) = services.config.admin_webhook_url.clone() else {
+		return;
+	};
+	let Some(secret) = services.config.admin_webhook_secret.clone() else {
+		return;
+	};
+
+	let payload = serde_json::json!({
+		"event": event,
+		"user_id": user_id,
+		"server": services.config.server_name.to_string(),
+	});
+	let client = services.client.dns.clone();
+
+	tokio::spawn(async move {
+		let body = payload.to_string();
+		let timestamp = std::time::SystemTime::now()
+			.duration_since(std::time::UNIX_EPOCH)
+			.map_or(0, |d| d.as_secs())
+			.to_string();
+		let signature = webhookkit::sign_stripe_timestamped(&timestamp, &body, &secret);
+
+		let result = client
+			.post(&url)
+			.header("Content-Type", "application/json")
+			.header("Signature", signature)
+			.header("Webhook-Timestamp", timestamp)
+			.body(body)
+			.send()
+			.await;
+
+		match result {
+			| Ok(resp) if !resp.status().is_success() => {
+				tracing::warn!(%event, status = %resp.status(), "admin webhook delivery refused");
+			},
+			| Err(e) => {
+				tracing::warn!(%event, error = %e, "admin webhook delivery failed");
+			},
+			| Ok(_) => {},
+		}
+	});
+}
