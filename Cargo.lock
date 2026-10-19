@@ -538,6 +538,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "blake3"
+version = "1.8.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d9e454fc11f76977dc803893aff6304ed33d6a26efae8696573bea74baa27ae"
+dependencies = [
+ "arrayvec",
+ "cc",
+ "cfg-if",
+ "constant_time_eq",
+ "cpufeatures 0.3.1",
+]
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1003,6 +1016,7 @@ dependencies = [
  "sha1 0.11.0",
  "tokio",
  "tracing",
+ "webhookkit",
 ]
 
 [[package]]
@@ -1302,6 +1316,12 @@ checksum = "9603f79528ece8163c496f8932121cb36cfe46259e9c907bb3d8205139d7caa3"
 dependencies = [
  "typewit",
 ]
+
+[[package]]
+name = "constant_time_eq"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d52eff69cd5e647efe296129160853a42795992097e8af39800e1060caeea9b"
 
 [[package]]
 name = "convert_case"
@@ -1692,6 +1712,20 @@ dependencies = [
  "darling_core 0.24.1",
  "quote",
  "syn 3.0.6",
+]
+
+[[package]]
+name = "dashmap"
+version = "6.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6361d5c062261c78a176addb82d4c821ae42bed6089de0e12603cd25de2059c"
+dependencies = [
+ "cfg-if",
+ "crossbeam-utils",
+ "hashbrown 0.14.5",
+ "lock_api",
+ "once_cell",
+ "parking_lot_core",
 ]
 
 [[package]]
@@ -2463,6 +2497,12 @@ checksum = "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888"
 
 [[package]]
 name = "hashbrown"
+version = "0.14.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e5274423e17b7c9fc20b6e7e208532f9b19825d82dfd615708b70edd83df41f1"
+
+[[package]]
+name = "hashbrown"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
@@ -2913,6 +2953,19 @@ dependencies = [
  "zerofrom",
  "zerotrie",
  "zerovec",
+]
+
+[[package]]
+name = "idempotency-kit"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f139909c8a8e8c0478a9fd42e317a6d31392dfa5bd7af989ca31b78b0462d712"
+dependencies = [
+ "async-trait",
+ "blake3",
+ "dashmap",
+ "hex",
+ "thiserror 2.0.21",
 ]
 
 [[package]]
@@ -7088,6 +7141,20 @@ checksum = "5a6580f308b1fad9207618087a65c04e7a10bc77e02c8e84e9b00dd4b12fa0bb"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "webhookkit"
+version = "2.2.0"
+source = "git+https://github.com/WyattAu/webhookkit#900b7e0a39ab52493f3aa660fac924eb65069413"
+dependencies = [
+ "hex",
+ "hmac 0.13.0",
+ "idempotency-kit",
+ "serde_json",
+ "sha2 0.11.0",
+ "subtle",
+ "thiserror 2.0.21",
 ]
 
 [[package]]

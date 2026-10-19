@@ -48,6 +48,40 @@ the gauge callback runs twice per collection.
 | Phase | Scope | State |
 |---|---|---|
 | 0 | Stock deployment on the estate NAS | deployment scaffold in the dotfiles repo (`truenas-matrix/`) |
-| 1 | Estate crates as additive integrations (metrics-kit done; telemetry-init, config-kit next) | in progress |
-| 2 | Behavior swaps behind config flags (outbox-kit for the federation send queue, loop-retry in the sender) | not started |
-| 3 | Estate-specific features (webhookkit admin notifications) | not started |
+| 1 | Estate crates as additive integrations (metrics-kit done; telemetry-init + config-kit assessed: estate crates stay out, upstream observability/config already covers them; verdicts in this file's history) | complete |
+| 2 | Behavior swaps behind config flags (outbox-kit for the federation send queue, loop-retry in the sender): assessed, upstream sender already carries durable queues, breaker-aware backoff, and netburst recovery; researched no | complete (documented no) |
+| 3 | Estate-specific features: webhookkit-signed admin notifications on local registrations | complete |
+
+## Phase 3 notes: the admin webhook
+
+`admin_webhook_url` + `admin_webhook_secret` (core config) enable signed
+notifications on local registrations. Signing uses
+[webhookkit](https://github.com/WyattAu/webhookkit) 2.2.0's canonical
+`sign_stripe_timestamped` (Stripe `t=`/`v1=` header convention), so
+receivers verify with that crate's own `verify_stripe_webhook` and no
+new receiver code. Delivery is spawned: registration never depends on
+the notification path, failures log and drop.
+
+Consolidation note: webhookkit briefly carried two signing APIs (this
+fork's phase-1 work landed `signing.rs` while the parallel estate work
+landed `sign_payload` + `sign_stripe_timestamped` in `stripe.rs`); the
+duplicate was removed upstream and the canonical API is
+`sign_payload` + `sign_stripe_timestamped`.
+
+## Verdict receipts (phases 1 and 2)
+
+- **telemetry-init, config-kit: estate crates stay out.** continuwuity's
+  observability (`src/core/log/` console/capture/reload layers,
+  `src/main/metrics.rs` OTel provider, `src/core/metrics/` exposition)
+  and configuration (layered TOML, `CONDUWUIT_*` env overrides, hot
+  reload) already provide what those estate crates bootstrap for
+  greener services. Adopting them here replaces a comprehensive,
+  upstream-shared subsystem with a thinner wrapper and breaks upstream
+  diff affinity for no capability gain.
+- **outbox-kit, loop-retry: researched no.** The federation send queue
+  (`src/service/sending/`) is durable (DB-backed per-destination
+  queues), breaker-aware, and carries netburst recovery plus retry
+  limits; outbox-kit's Postgres-outbox model duplicates it, and
+  loop-retry wraps backoff the sender implements inline. Revisit only
+  if the sender grows a requirement its queue cannot express
+  (multi-channel fanout, cross-instance claiming).
