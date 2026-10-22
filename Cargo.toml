@@ -265,7 +265,12 @@ version = "=0.2.0"
 features = ["openmetrics"]
 
 [workspace.dependencies.webhookkit]
-git = "https://github.com/WyattAu/webhookkit"
+# Pinned exactly (fork rule 2), like metrics-kit: 2.2.0 is the
+# canonical-signing-API release (`sign_payload`, `sign_stripe_timestamped`:
+# this fork's only call site), the same registry pin the ecom-engine
+# carries. Tracking a moving branch is how an unaudited signature-path
+# change ships into a homeserver.
+version = "=2.2.0"
 
 [workspace.dependencies.libloading]
 version = "0.9.0"
