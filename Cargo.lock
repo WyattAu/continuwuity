@@ -7146,7 +7146,8 @@ dependencies = [
 [[package]]
 name = "webhookkit"
 version = "2.2.0"
-source = "git+https://github.com/WyattAu/webhookkit#900b7e0a39ab52493f3aa660fac924eb65069413"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af7e022382caef72d87e443b9cc288c0fd760942be474475b8ff0cf6ab084458"
 dependencies = [
  "hex",
  "hmac 0.13.0",
